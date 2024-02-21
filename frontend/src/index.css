@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.form {
+  @apply border-solid border-stone-950 border-[1.5px] ml-[30vh] mt-[10vh] pt-10 pl-10 w-[28vw] text-black bg-white shadow-2xl drop-shadow-2xl
+}
+
+.sign-up {
+  @apply border-solid border-stone-950 border-[1.5px] ml-[30vh] mt-[5vh] pt-10 pl-10 h-[75vh] w-[28vw] text-black bg-white shadow-2xl drop-shadow-2xl
+}
+
+input, ::placeholder, label {
+  @apply md:text-xl
+}
+
+label {
+  @apply my-2
+}
+
+.input-field {
+  @apply mb-3 p-[4vw] py-2 w-[24vw] border border-black rounded-lg outline-blue-500
+}
+
+input[type="password"] {
+  @apply mb-3 p-[4vw] py-2 w-[24vw] border border-black rounded-lg outline-blue-500
+}
+
+input[type="file"] {
+  @apply w-[15vw]
+}
+
+.input-listings, input[type="number"] {
+  @apply mb-3 p-[3vw] py-1 w-[20vw] h-9 border border-black rounded-lg outline-blue-500 placeholder:text-center;
+
+}
+
+.input-button {
+  @apply text-white bg-green-500 w-[24vw] mt-4 mb-10 py-2 rounded-md
+}
+
+.rent-button {
+  @apply text-white bg-green-500 h-10 w-[30vh] my-[5vh] ml-[20vw] rounded float-left hover:bg-green-700 transition-all delay-75 hover:text-lg
+}
+
+.upload {
+  @apply text-black bg-transparent border-2 text-lg border-red-600 h-10 w-[5rem] rounded float-left hover:bg-red-400 transition-all hover:text-base
+}
+
+.property-type {
+  @apply text-xl mb-1
+}
+
+.small-details {
+  @apply my-2
+}
+
+h2:nth-child(2) {
+  @apply my-2
+}
+
+.view-details {
+  @apply bg-red-500 text-white w-full mb-5 px-4 py-2 rounded-md hover:bg-red-600 transition-colors duration-100 hover:border border-black
+}
+
+.user-sidebar {
+  @apply block my-3 py-4 px-12 text-black
+}
+
+.rentButton {
+  @apply text-white bg-green-500 py-2 mt-[-2rem] mb-4 -mr-[11rem] w-[43%] text-xl float-right rounded hover:bg-green-700 transition-all delay-75 hover:text-lg
+}
+.table td, .table th{
+  @apply px-12 py-2 border border-black
+}
+
+.action-btn{
+  @apply bg-red-500 border border-black mx-1 px-10 py-2 rounded-xl text-white hover:bg-red-400 hover:text-black hover:transition-all delay-[50ms] hover:outline outline-blue-700 hover:border-none text-lg outline-[3.5px]
+}

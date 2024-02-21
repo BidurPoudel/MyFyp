@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  propertyId      Int             @id @default(autoincrement()) @unique
+  address         String
+  area            String
+  description     String          @db.Text
+  price           Int
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  isAvailable     Boolean
+  ownerId         Int
+  propertyTypeId  Int
+  numberOfRooms   Int?
+  numberOfFlats   Int?
+  numberOfShutter Int?
+  owner           User            @relation(fields: [ownerId], references: [userId])
+  propertyType    PropertyType    @relation(fields: [propertyTypeId], references: [propertyTypeId])
+  images          PropertyImage[]
+  rent            Rent[]
+  payment         Payment[]
+}
+
+model User {
+  userId      Int        @id @default(autoincrement()) @unique
+  username    String
+  email       String     @unique
+  password    String     @unique
+  phoneNumber String     @unique
+  property    Property[]
+  rent        Rent[]
+  payment     Payment[]
+}
+
+model PropertyType {
+  propertyTypeId Int        @id @default(autoincrement()) @unique
+  propertyName   String     @unique
+  property       Property[]
+}
+
+model PropertyImage {
+  propertyImageId Int      @id @default(autoincrement()) @unique
+  imageUrl        String
+  propertyId      Int
+  property        Property @relation(fields: [propertyId], references: [propertyId])
+}
+
+model Rent {
+  rentId     Int      @id @default(autoincrement()) @unique
+  tenantId   Int
+  propertyId Int
+  rentDate   DateTime @default(now())
+  tenant     User     @relation(fields: [tenantId], references: [userId])
+  property   Property @relation(fields: [propertyId], references: [propertyId])
+}
+
+model Payment {
+  paymentId     Int      @id @default(autoincrement()) @unique
+  paymentAmount Float
+  ownerId       Int
+  propertyId    Int
+  paymentDate   DateTime @default(now())
+  owner         User     @relation(fields: [ownerId], references: [userId])
+  property      Property @relation(fields: [propertyId], references: [propertyId])
+}
