@@ -26,13 +26,13 @@ const Properties = () => {
   return (
     <>
       <SortButton />
-      <div className="card">
+      <div className="card flex">
         {
           allData.map((data) => (
             <PropertyCard
               key={data.propertyId}
               propertyId={data.propertyId}
-              images={`${imageUrl}/${data.images[0].replace('public\\uploads\\', '')}`}
+              images={data.images && data.images.length > 0 ? `${imageUrl}/${data.images[0].replace('public\\uploads\\', '')}` : ''}
               propertyType={data.propertyType.propertyName}
               address={data.address}
               area={data.area}

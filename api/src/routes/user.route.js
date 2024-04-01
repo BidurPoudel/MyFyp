@@ -7,7 +7,7 @@ import loginAuthentication from "../middlewares/isLoggedIn.js";
 const userRoute = Router();
 
 // userRoute.get('/logout', userController.logout)
-userRoute.post('/login', userController.login)
-userRoute.post("/signup", userController.signup)
-
+userRoute.post('/login', userController.login);
+userRoute.post("/signup", userController.signup);
+userRoute.get('/profile', loginAuthentication ,userController.getUserData)
 export default userRoute;

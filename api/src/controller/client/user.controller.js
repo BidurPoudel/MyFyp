@@ -80,25 +80,25 @@ class UserController {
         }
     }
 
-    // getUserData = async (req, res, next) => {
-    //     try {
-    //         const user = req.user.userId
-    //         const userDetails = await prisma.user.findUnique({
-    //             where: { userId: user.userId },
-    //             select: {
-    //                 username: true,
-    //                 email: true, phoneNumber: true
-    //             }
-    //         })
-    //         if (!userDetails) {
-    //             return res.status(404).json({ error: 'User not found' });
-    //         }
-    //         console.log(userDetails)
-    //         res.status(200).json(userDetails);
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // };
+    getUserData = async (req, res, next) => {
+        try {
+            const user = req.user.userId
+            const userDetails = await prisma.user.findUnique({
+                where: { userId: user},
+                select: {
+                    username: true,
+                    email: true, phoneNumber: true
+                }
+            })
+            if (!userDetails) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            console.log(userDetails)
+            res.status(200).json(userDetails);
+        } catch (error) {
+            next(error)
+        }
+    };
 
 
     //get route

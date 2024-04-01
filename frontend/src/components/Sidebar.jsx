@@ -12,57 +12,49 @@ const Sidebar = () => {
         </div>
         <div className="flex flex-col text-lg">
           <NavLink to="property"
-            className="user-sidebar"
-            isActive={() => location.pathname === '/property'}
+            className={({ isActive }) => `
+            p-[10px] px-[90px] py-[20px] duration-200 block
+            ${isActive ? "text-white duration-75 bg-blue-500 " : "text-black"} 
+            user-active`}
             style={({ isActive }) => ({
-              display: 'inline-block',
-              padding: '20px 90px',
-              background: isActive ? "#0076FC" : "transparent",
-
-              transition: "border-bottom 0.3s ease",
-
+              transition: "0.23s ease"
             })}
           >Property</NavLink>
           <NavLink to="chat"
-            className="user-sidebar"
-            isActive={() => location.pathname === '/chat'}
-            style={({ isActive }) => ({
-              display: 'inline-block',
-              padding: '20px 95px',
-              background: isActive ? "#0076FC" : "transparent",
-
-              transition: "border-bottom 0.3s ease",
+            className={({ isActive }) => `
+            p-[10px] px-[90px] py-[20px] duration-200 block
+            ${isActive ? "text-white duration-75 bg-blue-500 " : "text-black"} 
+            user-active`}
+            style={({ isactive }) => ({
+              transition: "0.23 ease"
             })}
           >Chats</NavLink>
           <NavLink to="payment"
-            className="user-sidebar"
-            isActive={() => location.pathname === '/payment'}
-            style={({ isActive }) => ({
-              display: 'inline-block',
-              padding: '20px 82px',
-              background: isActive ? "#0076FC" : "transparent",
-              transition: "border-bottom 0.3s ease",
+            className={ ({isActive})=>`
+            p-[10px] px-[90px] py-[20px] duration-200 block
+            ${isActive?"text-white duration-75 bg-blue-500 ":"text-black" } 
+            user-active`}
+            style={({ isactive }) => ({
+              transition: "0.23s ease",
 
             })}
           >Payment</NavLink>
           <NavLink to="setting"
-            className="user-sidebar"
-            isActive={() => location.pathname === '/setting'}
-            style={({ isActive }) => ({
-              display: 'inline-block',
-              padding: '20px 80px',
-              backgroundColor: isActive ? "#0076FC" : "transparent",
-              transition: "border-bottom 0.3s ease",
+            className={({ isActive }) => `
+            p-[10px] px-[90px] py-[20px] duration-200 block
+            ${isActive ? "text-white duration-75 bg-blue-500 " : "text-black"} 
+            user-active`}
+            style={({ isactive }) => ({
+              transition: "b0.23s ease",
             })}
           >Settings</NavLink>
           <NavLink to="/"
-            className="user-sidebar"
-            isActive={() => location.pathname === '/setting'}
-            style={({ isActive }) => ({
-              display: 'inline-block',
-              padding: '20px 85px',
-              backgroundColor: isActive ? "#0076FC" : "transparent",
-              transition: "border-bottom 0.3s ease",
+            className={({ isActive }) => `
+            p-[10px] px-[90px] py-[20px] duration-200 block
+            ${isActive ? "text-white duration-75 bg-blue-500 " : "text-black"} 
+            user-active`}
+            style={({ isactive }) => ({
+              transition: "0.23s ease",
             })}
           >Exit</NavLink>
         </div>

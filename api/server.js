@@ -2,8 +2,6 @@ import express from 'express'
 import cors from 'cors'
 import mainRoute from './src/main.route.js';
 import cookieParser from 'cookie-parser';
-import path, {join} from 'path'
-import { fileURLToPath } from 'url';
 const app = express();
 const port = 3001;
 
@@ -12,9 +10,12 @@ const port = 3001;
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({extended: false}));
-app.use(cors());
 app.use(cookieParser());
-
+const corsOptions = {
+  origin: 'http://127.0.0.1:5173',
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 
 

@@ -9,13 +9,13 @@ const Chat = () => {
 
       <div className="mx-10 mt-1 h-[100vh] bg-slate-200 w-full relative flex">
         <div className="message w-full flex-row-reverse">
-          <div class="flex justify-end">
-            <div class="bg-white rounded-lg p-3 mb-1 max-w-sm break-words mx-8 my-2">
+          <div className="flex justify-end">
+            <div className="bg-white rounded-lg p-3 mb-1 max-w-sm break-words mx-8 my-2">
               This is a sent message.
             </div>
           </div>
-          <div class="flex justify-start flex-col my-4">
-            <div class="bg-white rounded-lg p-3 mb-1 max-w-sm break-words mx-8 my-2 flex-row-reverse">
+          <div className="flex justify-start flex-col my-4">
+            <div className="bg-white rounded-lg p-3 mb-1 max-w-sm break-words mx-8 my-2 flex-row-reverse">
               This is a sent message.
             </div>
           </div>

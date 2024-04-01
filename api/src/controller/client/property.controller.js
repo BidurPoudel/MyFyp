@@ -5,8 +5,8 @@ class PropertyController {
 
     createPost = async (req, res, next) => {
         try {
-            const user = req.user;
-            const userId = user.userId
+            // const user = req.user;
+            const userId = req.user.userId
             const { address, area, description, price, flatNumber, roomNumber, shutterNumber, propertyName } = req.body;
             const amounts = parseInt(price, 10);
             const numberOfFlats = parseInt(flatNumber, 10);
@@ -34,7 +34,7 @@ class PropertyController {
                     numberOfFlats,
                     numberOfShutter,
                     isAvailable: true,
-                    owner: { connect: { userId: parseInt(userId) } },
+                    owner: { connect: { userId: userId } },
                     propertyType: {
                         connect: {
                             propertyTypeId: parseInt(propertyExisted.propertyTypeId)
@@ -223,37 +223,59 @@ class PropertyController {
         }
     }
 
-    updatePropertyTypeById = async (req, res, next) => {
-        const { propertyTypeId } = req.params;
-        const { propertyName } = req.body;
-        try {
-            //checking the property existed or not
-            const propertyExisted = await prisma.propertyType.findUnique(
-                {
-                    where: {
-                        propertyTypeId: parseInt(propertyId)
-                    }
-                }
-            )
-            if (!propertyExisted) {
-                return res.status(404).json({ error: 'Property not found' });
-            }
-
-            //deleting the property
-            const deleteProperty = await prisma.property.update({
-                where: {
-                    propertyId: parseInt(propertyId)
-                },
-                data: {
-                    propertyName
-                }
-            })
-            console.log(`using ${deleteProperty}, property is deleted successfully!!`)
-
-        } catch (error) {
-            next(error)
+    updateProperty = async (req, res, next) => {
+    try {
+        const { propertyId } = req.params;
+        const { address, area, description, price, flatNumber, roomNumber, shutterNumber, propertyName } = req.body;
+        const amounts = parseInt(price, 10) || 0;
+        const numberOfFlats = parseInt(flatNumber, 10) || 0;
+        const numberOfRooms = parseInt(roomNumber, 10) || 0;
+        const numberOfShutter = parseInt(shutterNumber, 10) || 0;
+        const files = req.files;
+        if (!address || !area || !description || isNaN(amounts) || isNaN(numberOfFlats) || isNaN(numberOfRooms) || isNaN(numberOfShutter)) {
+            return res.status(400).json({ error: 'Missing or invalid data in request body' });
         }
+
+        // Update the property
+        const updatedProperty = await prisma.property.update({
+            where: {
+                propertyId: parseInt(propertyId)
+            },
+            data: {
+                address,
+                area,
+                description,
+                price: amounts,
+                numberOfRooms,
+                numberOfFlats,
+                numberOfShutter,
+                isAvailable: true
+                // You may need to handle updating isAvailable based on your business logic
+            }
+        });
+
+        const updatedFiles = await Promise.all(
+            files.map(async (file) => {
+                const savedFile = await prisma.propertyImage.update({
+                    data: {
+                        imageUrl: file.path,
+                        property: {
+                            connect: {
+                                propertyId: parseInt(propertyId)
+                            }
+                        }
+                    },
+                });
+                return savedFile;
+            })
+        );
+
+        res.json(updatedProperty,'', updatedFiles);
+    } catch (error) {
+        next(error);
     }
+};
+
 
     deletePropertyById = async (req, res, next) => {
         const { propertyId } = req.params;

@@ -1,13 +1,36 @@
-import React, { useState } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import React, { useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { setCredentials } from "../features/authentication/authSlice";
+import { toast } from "react-toastify";
 
 const Create = () => {
+
+  const [data, setData]= useState({
+    // address: '',
+    // area: '',
+    // description: '',
+    // price: '',
+    // flatNumber: '',
+    // roomNumber: '',
+    // shutterNumber: '',
+    // propertyName: '',
+  })
+
+  const [userData, setUserData] = useState(null);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+  };
   const [files, setFiles] = useState([]);
   const handleImageSubmit = () => {
-    if (files.length > 0 && files.length < 7) {
+    if (files && files.length > 0 && files.length < 7) {
       files.forEach((file) => {
         const reader = new FileReader();
-
+  
         reader.onload = function (e) {
           const image = document.createElement("img");
           image.src = e.target.result;
@@ -17,15 +40,22 @@ const Create = () => {
           image.style.objectFit = "contain";
           image.style.marginTop = "15px";
           document.body.appendChild(image);
-          document.getElementById("imageContainer").appendChild(image);
+          document.getElementsByClassName("uploadImage");
         };
         reader.readAsDataURL(file);
       });
+    } else {
+      console.log("No files selected or too many files.");
     }
   };
+  
+  
   const handleFileChange = (e) => {
+    console.log("Selected files:", e.target.files);
     setFiles([...e.target.files]);
   };
+
+
 
   const {
     register,
@@ -33,12 +63,67 @@ const Create = () => {
     formState: { errors },
   } = useForm();
 
-  async function onSubmit(values) {
-    alert('clicked')
-    console.log('clicked')
-    console.log(values.propertyName)
-    console.log(values)
-  }
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      console.log(decodedToken);
+      setUserData(decodedToken);
+    } else {
+      toast.error('Please log in first!');
+    }
+  }, []);
+
+
+ const onSubmit = async (data) => {
+    try {
+      if (!userData) {
+        toast.error('Please log in first!');
+        return;
+      }
+
+      data.userId = userData.userId;
+      const formDataToAppend = new FormData();
+      for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+          formDataToAppend.append(key, data[key]);
+        }
+      }
+      files.forEach((file) => {
+        console.log("Files"+file);
+        formDataToAppend.append('images', file);
+      });
+      console.log(data)
+      const token = localStorage.getItem('token');
+
+      // Display the key/value pairs
+    for (var pair of formDataToAppend.entries()) {
+      console.group(pair[0]+ ', ' + pair[1]); 
+    }
+
+
+      const response = await axios.post(
+        'http://localhost:3001/api/properties/create',
+        formDataToAppend,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `${token}`
+          },
+          withCredentials: true
+        }
+      ); 
+
+      if (response.status === 200) {
+        toast.success('Property created successfully!');
+      }
+    } catch (error) {
+      console.error('Error creating property:', error);
+      
+      toast.error('Failed to create property. Please try again later.');
+    }
+  };
 
 
   return (
@@ -49,11 +134,11 @@ const Create = () => {
       <div className="addLists flex mt-[6vh]">
         <div className="property-listing flex bg-red-50 h-auto w-[55%] -mt-1  ml-[60px] border-2 border-red-300 float-left pt-5 pl-5 pr-5">
           <div className="first pl-10 mt-1">
-            <form action="/create" onSubmit={handleSubmit(onSubmit)}>
+            <form action="/create" method="POST" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex">
                 <div className="left">
                   <label htmlFor="Location">
-                    Location <br />{" "}
+                    Location <br />
                   </label>
                   <input
                     id="location"
@@ -203,8 +288,8 @@ const Create = () => {
                     <label htmlFor="image">Image</label>
                     <br />
                     <input
-                      id="file"
-                      {...register("image", { required: true })}
+                      id="File"
+                      {...register("images", { required: true })}
                       accept=".webp,.jpeg,.png"
                       className="block w-[13vh]"
                       type="file"
@@ -233,12 +318,6 @@ const Create = () => {
             </form>
           </div>
         </div>
-        {/* <div className="right-container">
-          <div
-            id="imageContainer"
-            className="h-auto w-auto flex flex-wrap float-right"
-          ></div>
-        </div> */}
       </div>
     </div>
   );

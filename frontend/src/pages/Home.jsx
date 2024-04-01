@@ -1,31 +1,37 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import { toast } from 'react-toastify';
+import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import {jwtDecode}  from 'jwt-decode';
+import axios from 'axios';
+
 const Home = () => {
-  const [user, setUser]= useState([])
-  const url = 'http://localhost:3001/api/user/login';
-  const getData = async (url) => {
-    try {
-      const response = await axios.post(url);
-      console.log(response.data)
-      setUser(response.data);
-    } catch (error) {
-      if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.authentication) {
-        toast.error(error.response.data.errors.authentication); // Display error message to user
-      } else {
-        console.log(error); // Log other errors to console
+  const [token, setToken] = useState(null);
+  
+  useEffect(() => {
+    const tokenData = Cookies.get('token');
+    const url = axios.get('http://localhost:3001/api/user/profile'
+    , {headers:{
+        Authorization:`${Cookies.get('token')}`
       }
     }
-  };
+    )
+    if(tokenData){
+      const decodedToken = jwtDecode(tokenData)
+      setToken(decodedToken);
+      console.log(decodedToken);
+      return decodedToken?.token;
+    }
+  }, [tokenData]);
 
-  useEffect(() => {
-    getData(url);
-  }, []);
   return (
-    <>
-      {user}
-    </>
-  )
-}
+    <div>
+      {token && (
+        <div>
+          <p>Token: {token.username}</p>
+        </div>
+      )}
+      <p>Other content of your home page...</p>
+    </div>
+  );
+};
 
-export default Home
+export default Home;
