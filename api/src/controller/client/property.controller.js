@@ -234,7 +234,7 @@ class PropertyController {
             const files = req.files;
             console.log("Request Body:", req.body);
 
-            if(!req.user.userId){
+            if (!req.user.userId) {
                 console.log("not logged in")
             }
 
@@ -279,7 +279,7 @@ class PropertyController {
                 );
             }
             console.log(updatedProperty)
-            res.json(updatedProperty);
+            return res.json(updatedProperty);
         } catch (error) {
             next(error);
         }
@@ -287,15 +287,28 @@ class PropertyController {
 
 
     deletePropertyById = async (req, res, next) => {
-        const { propertyId } = req.params;
-
         try {
+            const { propertyId } = req.params;
+            if (!req.user.userId) {
+                return res.status(401).json({ message: "Please log in first" });
+            }
+            await prisma.propertyImage.deleteMany({
+                where: {
+                    propertyId: parseInt(propertyId)
+                }
+            });
+
             const deleteProperty = await prisma.property.delete({
                 where: {
                     propertyId: parseInt(propertyId)
                 }
             })
+
             console.log(`using ${deleteProperty}, property is deleted successfully!!`)
+            res.json({ 
+                message: `Property with ID ${propertyId} deleted successfully`,
+                deletedPropertyId: deleteProperty.propertyId // Return the deleted property ID
+            });
         } catch (error) {
             next(error)
         }
