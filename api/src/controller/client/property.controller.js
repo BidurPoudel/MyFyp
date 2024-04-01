@@ -151,7 +151,7 @@ class PropertyController {
         try {
             const getAllProperties = await prisma.property.findUnique({
                 where: {
-                    propertyId:parseInt(propertyId),
+                    propertyId: parseInt(propertyId),
                     isAvailable: true,
                 },
                 include: {
@@ -168,7 +168,7 @@ class PropertyController {
                 }
             });
             console.log(getAllProperties)
-            console.log(typeof(propertyId))
+            console.log(typeof (propertyId))
             // res.status(200).json(propertiesWithDetails);
             res.send(getAllProperties);
         } catch (error) {
@@ -224,57 +224,66 @@ class PropertyController {
     }
 
     updateProperty = async (req, res, next) => {
-    try {
-        const { propertyId } = req.params;
-        const { address, area, description, price, flatNumber, roomNumber, shutterNumber, propertyName } = req.body;
-        const amounts = parseInt(price, 10) || 0;
-        const numberOfFlats = parseInt(flatNumber, 10) || 0;
-        const numberOfRooms = parseInt(roomNumber, 10) || 0;
-        const numberOfShutter = parseInt(shutterNumber, 10) || 0;
-        const files = req.files;
-        if (!address || !area || !description || isNaN(amounts) || isNaN(numberOfFlats) || isNaN(numberOfRooms) || isNaN(numberOfShutter)) {
-            return res.status(400).json({ error: 'Missing or invalid data in request body' });
-        }
+        try {
+            const { propertyId } = req.params;
+            const { address, area, description, price, flatNumber, roomNumber, shutterNumber, propertyName } = req.body;
+            const amounts = parseInt(price, 10);
+            const numberOfFlats = parseInt(flatNumber, 10);
+            const numberOfRooms = parseInt(roomNumber, 10);
+            const numberOfShutter = parseInt(shutterNumber, 10);
+            const files = req.files;
+            console.log("Request Body:", req.body);
 
-        // Update the property
-        const updatedProperty = await prisma.property.update({
-            where: {
-                propertyId: parseInt(propertyId)
-            },
-            data: {
-                address,
-                area,
-                description,
-                price: amounts,
-                numberOfRooms,
-                numberOfFlats,
-                numberOfShutter,
-                isAvailable: true
-                // You may need to handle updating isAvailable based on your business logic
+            if(!req.user.userId){
+                console.log("not logged in")
             }
-        });
 
-        const updatedFiles = await Promise.all(
-            files.map(async (file) => {
-                const savedFile = await prisma.propertyImage.update({
-                    data: {
-                        imageUrl: file.path,
-                        property: {
-                            connect: {
-                                propertyId: parseInt(propertyId)
+            const propertyType = await prisma.propertyType.findFirst({
+                where: {
+                    propertyName: propertyName
+                }
+            });
+
+            const updatedProperty = await prisma.property.updateMany({
+                where: {
+                    propertyId: parseInt(propertyId)
+                },
+                data: {
+                    address,
+                    area,
+                    description,
+                    price: amounts,
+                    numberOfRooms,
+                    numberOfFlats,
+                    numberOfShutter,
+                    propertyTypeId: propertyType.propertyTypeId,
+                    isAvailable: true
+                }
+            });
+
+            if (files && Array.isArray(files)) {
+                const savedFiles = await Promise.all(
+                    files.map(async (file) => {
+                        const savedFile = await prisma.propertyImage.create({
+                            data: {
+                                imageUrl: file.path,
+                                property: {
+                                    connect: {
+                                        propertyId: parseInt(propertyId)
+                                    }
+                                }
                             }
-                        }
-                    },
-                });
-                return savedFile;
-            })
-        );
-
-        res.json(updatedProperty,'', updatedFiles);
-    } catch (error) {
-        next(error);
-    }
-};
+                        });
+                        return savedFile;
+                    })
+                );
+            }
+            console.log(updatedProperty)
+            res.json(updatedProperty);
+        } catch (error) {
+            next(error);
+        }
+    };
 
 
     deletePropertyById = async (req, res, next) => {
@@ -291,9 +300,6 @@ class PropertyController {
             next(error)
         }
     }
-
-
-
 }
 
 export const propertyController = new PropertyController();

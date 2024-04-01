@@ -14,7 +14,7 @@ const propertyRoute = Router();
 propertyRoute.post('/create',  loginAuthentication, upload.array('images', 10), propertyController.createPost);
 propertyRoute.get('/allProperties', propertyController.getAllroperty);
 propertyRoute.get('/:propertyId', propertyController.getPropertydetails);
-propertyRoute.put('/:propertyId', loginAuthentication, propertyController.updateProperty)
+propertyRoute.put('/:propertyId', loginAuthentication, upload.array('images', 10), propertyController.updateProperty)
 propertyRoute.get('/rent/:propertyId', loginAuthentication, rentController.rentProperty)
 propertyRoute.delete('/dashboard/property/:propertyId', propertyController.deletePropertyById);
 
