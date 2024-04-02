@@ -14,6 +14,8 @@ const PropertyDetails = () => {
     const [rentProperty, setRentProperty]= useState([])
     const token = localStorage.getItem('token');
     const { propertyId } = useParams();
+    console.log(propertyId)
+    console.log(typeof(propertyId))
     const navigate= useNavigate()
     const apiUrl = `http://localhost:3001/api/properties/${propertyId}`;
     const rentUrl = `http://localhost:3001/api/properties/rent/${propertyId}`;

@@ -1,4 +1,5 @@
 import React from 'react'
+import Modal from 'react-modal';
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { Route, RouterProvider, createBrowserRouter, useNavigate } from 'react-router-dom'
@@ -20,7 +21,8 @@ import Cookies from 'js-cookie';
 import { store, persistor } from './app/store.jsx'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react';
-
+import UpdateProperty from './pages/user-dashboard/UpdateProperty.jsx';
+Modal.setAppElement('#root');
 const ProtectedRoute = (props) => {
   const { route } = props
   const navigate = useNavigate();
@@ -52,7 +54,8 @@ const router = createBrowserRouter([
       { path: 'property', element: <OwnerProperty /> },
       { path: 'chat', element: <Chat /> },
       { path: 'payment', element: <Payment /> },
-      { path: 'setting', element: <Setting /> }
+      { path: 'setting', element: <Setting /> },
+      {path: 'update-property/:propertyId', element:<UpdateProperty/>}
 
     ]
   }

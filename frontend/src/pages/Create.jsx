@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../features/authentication/authSlice";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 const Create = () => {
 
@@ -19,6 +20,8 @@ const Create = () => {
     // shutterNumber: '',
     // propertyName: '',
   })
+
+  const navigate = useNavigate();
 
   const [userData, setUserData] = useState(null);
   const handleChange = (e) => {
@@ -117,6 +120,8 @@ const Create = () => {
 
       if (response.status === 200) {
         toast.success('Property created successfully!');
+        navigate('/properties')
+
       }
     } catch (error) {
       console.error('Error creating property:', error);
