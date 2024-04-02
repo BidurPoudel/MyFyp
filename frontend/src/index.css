@@ -75,5 +75,5 @@ h2:nth-child(2) {
 }
 
 .action-btn{
-  @apply bg-red-500 border border-black mx-1 px-10 py-2 rounded-xl text-white hover:bg-red-400 hover:text-black hover:transition-all delay-[50ms] hover:outline outline-blue-700 hover:border-none text-lg outline-[3.5px]
+  @apply bg-red-500 border border-black mx-1 px-5 py-1 rounded-xl text-white hover:bg-red-400 hover:text-black hover:transition-all delay-[50ms] hover:outline outline-blue-700 hover:border-none text-lg outline-[3.5px]
 }

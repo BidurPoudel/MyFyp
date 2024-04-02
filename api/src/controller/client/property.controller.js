@@ -195,33 +195,33 @@ class PropertyController {
         }
     }
 
-    deletePropertyById = async (req, res, next) => {
-        const { propertyId } = req.params;
-        try {
-            //checking the property existed or not
-            const propertyExisted = await prisma.propertyType.findUnique(
-                {
-                    where: {
-                        propertyId: parseInt(propertyId)
-                    }
-                }
-            )
-            if (!propertyExisted) {
-                return res.status(404).json({ error: 'Property not found' });
-            }
+    // deletePropertyById = async (req, res, next) => {
+    //     const { propertyId } = req.params;
+    //     try {
+    //         //checking the property existed or not
+    //         const propertyExisted = await prisma.propertyType.findUnique(
+    //             {
+    //                 where: {
+    //                     propertyId: parseInt(propertyId)
+    //                 }
+    //             }
+    //         )
+    //         if (!propertyExisted) {
+    //             return res.status(404).json({ error: 'Property not found' });
+    //         }
 
-            //deleting the property
-            const deleteProperty = await prisma.property.delete({
-                where: {
-                    propertyId: parseInt(propertyId)
-                }
-            })
-            console.log(`using ${deleteProperty}, property is deleted successfully!!`)
+    //         //deleting the property
+    //         const deleteProperty = await prisma.property.delete({
+    //             where: {
+    //                 propertyId: parseInt(propertyId)
+    //             }
+    //         })
+    //         console.log(`using ${deleteProperty}, property is deleted successfully!!`)
 
-        } catch (error) {
-            next(error)
-        }
-    }
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
 
     updateProperty = async (req, res, next) => {
         try {
@@ -313,6 +313,35 @@ class PropertyController {
             next(error)
         }
     }
+
+    getOwnerProperties = async (req, res, next) => {
+        try {
+            const userId = req.user.userId;
+            if(!userId) console.log('not logged in!!');
+            const properties = await prisma.property.findUniqueOrThrow({
+                where: {
+                    ownerId: userId, // Filter properties by ownerId (logged-in user's ID)
+                },
+                include: {
+                    owner: {
+                        select: {
+                            userId: true,
+                            username: true,
+                            email: true,
+                            phoneNumber: true
+                        }
+                    },
+                    images: true,
+                    propertyType: true
+                }
+            });
+            res.json(properties);
+            console.log(properties.propertyId)
+        } catch (error) {
+            next(error);
+        }
+    };
+    
 }
 
 export const propertyController = new PropertyController();
