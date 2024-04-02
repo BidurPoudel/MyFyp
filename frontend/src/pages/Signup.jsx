@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useForm } from "react-hook-form";
 import axios from 'axios';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -25,14 +25,24 @@ const SignUp = () => {
       const response = axios.post('http://localhost:3001/api/user/signup', values)
       console.log(values)
       console.log(response.data);
-      // navigate('/login')
+      if(response.status === 200){
+        toast.success('Signup Successful', {
+          position: "top-right",
+          autoClose: 6000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
+          transition: Zoom,
+        })
+        navigate('/login')
+      }
     } catch (error) {
       if(error){
         if (error.response) {
           setErrorMessage(error.message);
-          // setTimeout(() => {
-          //   setErrorMessage('');
-          // }, 5000);
       }
     }
   }

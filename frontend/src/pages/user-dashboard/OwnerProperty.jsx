@@ -7,7 +7,7 @@ const OwnerProperty = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [deletePropertyId, setDeletePropertyId] = useState(null)
-  
+
   function handleDeleteButton(propertyId){
     setIsVisible(true)
     setDeletePropertyId(propertyId)
@@ -52,7 +52,8 @@ const OwnerProperty = () => {
 
     fetchProperties();
   }, []);
-
+  const ownerId = properties.length > 0 ? properties[0].owner.userId : null;
+  const totalPropertiesPosted = properties.filter(property => property.ownerId === ownerId).length;
   return (
     <div>
       <style>{`
@@ -73,6 +74,7 @@ const OwnerProperty = () => {
       `}</style>
       <div>
         <p className='flex justify-center p-10 text-5xl font-semibold'>Your properties</p>
+        <h2 className='px-32 pb-[1rem] text-lg font-semibold'>Total properties posted: {totalPropertiesPosted}</h2>
       </div>
      <div className="table-responsive table mx-[3%]  w-[50%]">
         <table className="table boder-2" >
