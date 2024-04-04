@@ -289,30 +289,50 @@ class PropertyController {
     deletePropertyById = async (req, res, next) => {
         try {
             const { propertyId } = req.params;
-            if (!req.user.userId) {
+            const userId = req.user.userId;
+    
+            // Check if the user is logged in
+            if (!userId) {
                 return res.status(401).json({ message: "Please log in first" });
             }
+    
+            // Delete associated images of the property
             await prisma.propertyImage.deleteMany({
                 where: {
                     propertyId: parseInt(propertyId)
                 }
             });
-
-            const deleteProperty = await prisma.property.delete({
+            await prisma.rent.deleteMany({
                 where: {
                     propertyId: parseInt(propertyId)
                 }
-            })
-
-            console.log(`using ${deleteProperty}, property is deleted successfully!!`)
+            });
+    
+            // Delete payments associated with the property
+            await prisma.payment.deleteMany({
+                where: {
+                    propertyId: parseInt(propertyId)
+                }
+            });
+            
+            // Delete the property itself
+            const deletedProperty = await prisma.property.delete({
+                where: {
+                    propertyId: parseInt(propertyId)
+                }
+            });
+    
+            console.log(`Property with ID ${propertyId} deleted successfully`);
+    
             res.json({ 
                 message: `Property with ID ${propertyId} deleted successfully`,
-                deletedPropertyId: deleteProperty.propertyId // Return the deleted property ID
+                deletedPropertyId: deletedProperty.propertyId // Return the deleted property ID
             });
         } catch (error) {
-            next(error)
+            next(error);
         }
-    }
+    };
+    
 
     getOwnerProperties = async (req, res, next) => {
         try {

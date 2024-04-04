@@ -3,24 +3,27 @@ import Model from 'react-modal';
 import axios from 'axios';
 import { useParams } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 const OwnerProperty = () => {
+  const {propertyId} = useParams
   const [isVisible, setIsVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [deletePropertyId, setDeletePropertyId] = useState(null)
 
-  function handleDeleteButton(propertyId){
+  function handleDeleteButton(propertyId) {
     setIsVisible(true)
     setDeletePropertyId(propertyId)
-    
+
     console.log("Property ID clicked:", propertyId);
   }
-  async function handleDelete (id){
+  async function handleDelete(id) {
     setIsVisible(false)
     console.log("clicked:", id);
     const token = localStorage.getItem('token')
     console.log(token)
     try {
-      const response = await axios.delete(`http://localhost:3001/api/properties/${id}`,{
+      const response = await axios.delete(`http://localhost:3001/api/properties/${id}`, {
         headers: {
           Authorization: `${token}`
         },
@@ -43,7 +46,7 @@ const OwnerProperty = () => {
           },
           withCredentials: true
         });
-        console.log(response.data) 
+        console.log(response.data)
         setProperties(response.data); // Assuming the response data is an array of properties
       } catch (error) {
         console.error('Error fetching properties:', error);
@@ -56,27 +59,12 @@ const OwnerProperty = () => {
   const totalPropertiesPosted = properties.filter(property => property.ownerId === ownerId).length;
   return (
     <div>
-      <style>{`
-        .custom-modal-overlay {
-          animation: pop-up 0.1s ease-in-out;
-        }
-
-        @keyframes pop-up {
-          from {
-            opacity: 0;
-            transform: scale(0.1);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-      `}</style>
+      
       <div>
         <p className='flex justify-center p-10 text-5xl font-semibold'>Your properties</p>
         <h2 className='px-32 pb-[1rem] text-lg font-semibold'>Total properties posted: {totalPropertiesPosted}</h2>
       </div>
-     <div className="table-responsive table mx-[3%]  w-[50%]">
+      <div className="table-responsive table mx-[3%]  w-[50%]">
         <table className="table boder-2" >
           <thead>
             <tr>
@@ -92,29 +80,29 @@ const OwnerProperty = () => {
             </tr>
           </thead>
           <tbody>
-          {properties.map((property, index)=>(   
-            <tr key={index} className='text-lg'>
-              <td>{index + 1}</td>
-              <td>{property.propertyType.propertyName}</td>
-              <td>{property.address}</td>
-              <td>{property.area}</td>
-              <td>{property.price}</td>
-              <td>{property.numberOfRooms}</td>
-              <td>{property.numberOfFlats}</td>
-              <td>{property.numberOfShutter}</td>
-              <td className='flex'>
-                <NavLink to={`/dashboard/update-property/${property.propertyId}`} className="action-btn">
-                Update
-              </NavLink>
-                <button className="action-btn" type="button" onClick={()=>handleDeleteButton(property.propertyId)}>
-                  Delete
-                </button>
-              </td>
-            </tr>
-              ))}
+            {properties.map((property, index) => (
+              <tr key={index} className='text-lg'>
+                <td>{index + 1}</td>
+                <td>{property.propertyType.propertyName}</td>
+                <td>{property.address}</td>
+                <td>{property.area}</td>
+                <td>{property.price}</td>
+                <td>{property.numberOfRooms}</td>
+                <td>{property.numberOfFlats}</td>
+                <td>{property.numberOfShutter}</td>
+                <td className='flex'>
+                  <NavLink to={`/dashboard/update-property/${property.propertyId}`} className="action-btn">
+                    Update
+                  </NavLink>
+                  <button className="action-btn" type="button" onClick={() => handleDeleteButton(property.propertyId)}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
           <tfoot>
-          <tr>
+            <tr>
               <th>S.NO</th>
               <th>Property Type</th>
               <th>Address of Property</th>
@@ -131,32 +119,40 @@ const OwnerProperty = () => {
       <Model
         isOpen={isVisible}
         onClick= {()=>handleDeleteButton(property.propertyId)}
-        overlayClassName="modal-overlay"
-        contentLabel="Delete Modal"
         style={{
-          overlay:{
+          overlay: {
             backgroundColor: "rgba(0, 0, 0, 0.5)",
           },
           content: {
             top: '50px', // Initial top position
             left: '50%', // Center horizontally
             transform: 'translateX(-50%)', // Center horizontally
-            height: "300px",
-            width: "500px",
+            height: "35%",
+            width: "40%",
             borderRadius: "25px",
-            animation: "fade-in 500ms forwards", // Fade out animation
-            transition: "top 1.5ms ease", // Apply transition effect to top position
+            animation: "fade-in 5s forwards", // Fade out animation
+            transition: "top 1s ease-out", // Apply transition effect to top position
           }
         }}
       >
-        <div className='flex justify-around'>
-        <h1 className='text-red-500 text-3xl font-bold'>Do you want to Delete???</h1>
-        <button onClick={() => setIsVisible(false)} className='text-3xl px-3 '> X</button>
-        </div>
-        <p className='text-xl font-bold my-6 mx-10'>This action cannot be undone!!!</p>
-        <div className='flex justify-between w-[20rem] my-[10px] ml-[45px]'>
-        <button className='action-btn ' onClick={()=>handleDelete(deletePropertyId)}>Delete</button>
-        <button className='mx-1 px-5 py-1 rounded-xl border border-black bg-gray-300 ' onClick={() => setIsVisible(false)}>Close</button>
+        <div>
+          <div className='flex justify-around relative'>
+            <h1 className='text-red-500 text-5xl font-bold'>Do you want to Delete???</h1>
+            <button onClick={() => setIsVisible(false)} className='text-3xl px-3 w-10 absolute right-1'> 
+            <FontAwesomeIcon icon={faXmark}
+                size='1x'
+                style={{ color: 'black', paddingTop: "10px" }}
+                className='-mt-1 cursor-pointer relative'
+                onClick={() => setOpen(!open)}
+              /></button>
+          </div>
+          <p className='text-2xl font-bold my-10 mx-44 w-1/2 h-1/2 text-red-500'>This action cannot be undone!!!</p>
+          <div className='flex relative justify-between w-1/7 my-[4rem] ml-[45px] '>
+            <div className=' absolute right-6 top-6'>
+            <button className='action-btn' onClick={() => handleDelete(deletePropertyId)}>Delete</button>
+            <button className='mx-1 px-5 py-1 font-bold rounded-xl border border-black bg-gray-300 ' onClick={() => setIsVisible(false)}>Close</button>
+            </div>
+          </div>
         </div>
       </Model>
     </div>

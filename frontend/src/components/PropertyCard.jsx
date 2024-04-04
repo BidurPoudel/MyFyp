@@ -1,5 +1,5 @@
 import React from 'react'
-import land from '../assets/land.jfif'
+// import land from '../assets/land.jfif'
 import { useNavigate } from 'react-router';
 const PropertyCard = (props) => {
     const address = 'address';

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
-import land from '../assets/land.jfif'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import PropertyCard from '../components/PropertyCard.jsx'
@@ -55,6 +54,9 @@ const PropertyDetails = () => {
                 theme: "light",
                 transition: Zoom,
               })
+            if(response.data === 400){
+                toast.error(error.response.data.errors);
+            }
         } catch (error) {
             console.log(error);
             if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.authentication) {
@@ -93,7 +95,7 @@ const PropertyDetails = () => {
                         <h1 className='text-3xl w-1/2 pr-10 flex justify-centerfont-semibold mx-[15rem] pl-8 pb-7'>Property Details</h1>
                         <p className='pt-3 text-2xl mb-5'><strong className="pr-3">Property type:</strong>{propertyDetails.propertyType?.propertyName}</p>
                         <div className="descriptions text-xl">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti impedit incidunt temporibus maxime corporis exercitationem amet porro assumenda, facilis reprehenderit repellendus sit qui quam molestiae suscipit aliquam sint vitae delectus. {propertyDetails.description}
+                            {propertyDetails.description}
                         </div>
                         <div className="other-details text-xl mt-3">
                             <p className='pt-3 '><strong className="pr-3">Owner name:</strong>: {propertyDetails.owner?.username}</p>
@@ -135,7 +137,7 @@ const PropertyDetails = () => {
                                   ...image,
                                   imageUrl: image.imageUrl.replace("public\\uploads\\", "")
                                 }));
-                                console.log(modifiedImages[0].imageUrl);
+                                // console.log(modifiedImages[0].imageUrl);
                                 for(let i = 1; i<modifiedImages.length; i++){
                                     <img 
                                     src={propertyDetails.images && propertyDetails.images.length > 0 ?
@@ -151,7 +153,7 @@ const PropertyDetails = () => {
                         }
                     </div>
                 </div>
-                <button className='rentButton' onClick={handleRentButton} onMouseOver={handleMouse}>Rent the property</button>
+                <button className='rentButton ' onClick={handleRentButton} onMouseOver={handleMouse}>Rent the property</button>
             </div>
             <div className="similars bg-slate-100 mx-60 my-11 flex flex-wrap justify-around ">
                 <PropertyCard />

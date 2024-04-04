@@ -40,7 +40,7 @@ const router = createBrowserRouter([
       { path: "/login", element: <Login /> },
       { path: "/signup", element: <SignUp /> },
       { path: "/logout", element: <Login /> },
-      { path: "", element: <ProtectedRoute route={Home} /> },
+      { path: "/", element: <Home/> },
       { path: "/create", element: <Create /> },
       { path: "/properties", element: <Properties /> },
       { path: "/properties/:propertyId", element: <PropertyDetails /> },

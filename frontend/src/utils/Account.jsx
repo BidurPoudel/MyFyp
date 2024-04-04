@@ -13,7 +13,7 @@ const Account = () => {
       <div>
         <FontAwesomeIcon icon={faCircleUser}
           size='2xl'
-          style={{ color: 'white', paddingTop: "10px" }}
+          style={{ color: 'black', paddingTop: "10px" }}
           className='-mt-1 cursor-pointer relative'
           onClick={() => setOpen(!open)}
         />

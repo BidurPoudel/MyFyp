@@ -47,6 +47,10 @@ input[type="file"] {
   @apply text-black bg-transparent border-2 text-lg border-red-600 h-10 w-[5rem] rounded float-left hover:bg-red-400 transition-all hover:text-base
 }
 
+.close{
+   @apply text-black bg-transparent border-2 text-lg border-black h-10 w-[5rem] rounded float-left  transition-all hover:text-base
+}
+
 .property-type {
   @apply text-xl mb-1
 }
