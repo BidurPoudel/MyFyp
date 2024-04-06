@@ -61,9 +61,6 @@ class AdminController {
         }
     }
     
-    
-    
-    
     getAllProperties = async (req, res) => {
         try {
             const properties = await prisma.property.findMany({
@@ -93,8 +90,8 @@ class AdminController {
         try {
             // Find the property
             const property = await prisma.property.findUnique({
-                where: { propertyId: parseInt(propertyId)},
-                include: { propertyImage: true, rent: true, owner: true }
+                where: { propertyId: parseInt(propertyId) },
+                include: { rent: true }
             });
     
             // Check if the property exists
@@ -102,19 +99,14 @@ class AdminController {
                 return res.status(404).json({ error: 'Property not found' });
             }
     
-            // Check if the property belongs to the authenticated user
-            if (property.owner.userId !== parseInt(userId)) {
-                return res.status(403).json({ error: 'Forbidden' });
-            }
-    
-            // Delete associated property images
+            
             await prisma.propertyImage.deleteMany({
                 where: { propertyId: parseInt(propertyId) },
             });
     
             // If the property is rented, delete the associated rent
             if (property.rent.length > 0) {
-                await prisma.rent.delete({
+                await prisma.rent.deleteMany({
                     where: { propertyId: parseInt(propertyId) },
                 });
             }
@@ -124,12 +116,13 @@ class AdminController {
                 where: { propertyId: parseInt(propertyId) },
             });
     
-            res.status(204).end(); // Respond with success
+            res.json({message: 'sucessfully deleted property'}); // Respond with success
         } catch (error) {
             console.error('Error deleting property:', error);
             res.status(500).json({ error: 'Internal server error' });
         }
     }
+    
     
 }
 export const adminController = new AdminController();
