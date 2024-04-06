@@ -4,37 +4,25 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
 const Account = () => {
-  const menus = ['dashboard'];
+  const menus = ['owner'];
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  async function onNavigate(){
+    navigate('owner/')
+  }
 
   return (
     <div>
       <div>
         <FontAwesomeIcon icon={faCircleUser}
-          size='2xl'
-          style={{ color: 'black', paddingTop: "10px" }}
+          size='xl'
+          style={{ color: '#373737', paddingTop: "15px" }}
           className='-mt-1 cursor-pointer relative'
-          onClick={() => setOpen(!open)}
+          onClick={onNavigate}
         />
       </div>
-      {open && <div className="drop absolute right-2 top-[9vh] ">
-        <ul className='bg-red-200 text-black w-[15vh] py-2 px-1 ' onClick={() => setOpen(open)}>
-          {
-            menus.map((menu) => (
-              <li
-                key={menu}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  navigate(`/${menu}/property`);
-                  setOpen(false)
-                }
-                }
-                className='cursor-pointer  px-1 w-[100%] hover:bg-slate-200 '>{menu.toUpperCase()}</li>
-            ))
-          }
-        </ul>
-      </div>}
+     
     </div>
   )
 }

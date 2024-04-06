@@ -2,7 +2,7 @@ import prisma from "../../../prisma/index.js";
 
 
 
-class AdminController{
+class AdminRoleController{
     createPropertyType = async(req, res, next)=>{
         try {
             const createProperty = await prisma.propertyType.createMany({
@@ -55,4 +55,4 @@ class AdminController{
     }
 }
 
-export const adminController = new AdminController();
+export const adminRoleController = new AdminRoleController();

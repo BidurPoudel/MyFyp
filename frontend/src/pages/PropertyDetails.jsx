@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faComment } from '@fortawesome/free-solid-svg-icons'
+import { faWarning } from '@fortawesome/free-solid-svg-icons'
 import PropertyCard from '../components/PropertyCard.jsx'
 import { useParams } from 'react-router'
 import { useNavigate } from "react-router-dom";
@@ -67,7 +67,8 @@ const PropertyDetails = () => {
         }
     }
 
-    const handleMouse = () => {
+    
+    async function ReportButton(){
         console.log(propertyId)
     }
 
@@ -81,8 +82,8 @@ const PropertyDetails = () => {
 
     return (
         <>
-            <div className="container">
-                <div className="container mx-44 h-[50vh] ">
+            <div className="container ">
+                <div className="container mx-44 h-[65vh] w-full ">
                     <img
                         src={propertyDetails.images && propertyDetails.images.length > 0 ?
                             `${imagesUrl}/${propertyDetails.images[0].imageUrl.replace('public\\uploads\\', '')}` : ``
@@ -120,11 +121,11 @@ const PropertyDetails = () => {
                         </div>
                         <div className="features-icons flex my-5">
                             <div className="message mt-5">
-                                <FontAwesomeIcon icon={faComment}
-                                    size='2xl'
+                                <FontAwesomeIcon icon={faWarning}
+                                    size='lg'
                                     style={{ color: 'black', paddingTop: "10px", height: "2.5rem" }}
                                     className='-mt-1 cursor-pointer relative'
-                                    onClick={() => setOpen(!open)}
+                                    onClick={ReportButton}
                                 />
                             </div>
                         </div>
@@ -153,16 +154,9 @@ const PropertyDetails = () => {
                         }
                     </div>
                 </div>
-                <button className='rentButton ' onClick={handleRentButton} onMouseOver={handleMouse}>Rent the property</button>
+                <button className='rentButton mb-3' onClick={handleRentButton}>Rent the property</button>
             </div>
-            <div className="similars bg-slate-100 mx-60 my-11 flex flex-wrap justify-around ">
-                <PropertyCard />
-                <PropertyCard />
-                <PropertyCard />
-                <PropertyCard />
-                <PropertyCard />
-                <PropertyCard />
-            </div>
+           
         </>
     )
 }

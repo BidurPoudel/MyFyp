@@ -1,16 +1,16 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { setCredentials } from "../features/authentication/authSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import Model from 'react-modal';
 
 const Create = () => {
 
-  const [data, setData]= useState({
+  const [data, setData] = useState({
     // address: '',
     // area: '',
     // description: '',
@@ -21,6 +21,8 @@ const Create = () => {
     // propertyName: '',
   })
 
+  const [isVisible, setIsVisible] = useState(false)
+  const [images, setImages] = useState([]);
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState(null);
@@ -30,32 +32,38 @@ const Create = () => {
   };
   const [files, setFiles] = useState([]);
   const handleImageSubmit = () => {
+    setIsVisible(true)
+
     if (files && files.length > 0 && files.length < 7) {
       files.forEach((file) => {
         const reader = new FileReader();
-  
+
         reader.onload = function (e) {
           const image = document.createElement("img");
+          const imageDiv = document.getElementsByClassName('image-div')
           image.src = e.target.result;
           image.style.marginX = "-2px";
           image.style.width = "15vw";
           image.style.height = "10vh";
           image.style.objectFit = "contain";
           image.style.marginTop = "15px";
-          document.body.appendChild(image);
+          // document.body.appendChild(image);
           document.getElementsByClassName("uploadImage");
         };
         reader.readAsDataURL(file);
       });
+      // setIsVisible(false)
+      
     } else {
       console.log("No files selected or too many files.");
     }
   };
-  
-  
+
+
   const handleFileChange = (e) => {
     console.log("Selected files:", e.target.files);
     setFiles([...e.target.files]);
+    setImages([...e.target.files])
   };
 
 
@@ -79,7 +87,7 @@ const Create = () => {
   }, []);
 
 
- const onSubmit = async (data) => {
+  const onSubmit = async (data) => {
     try {
       if (!userData) {
         toast.error('Please log in first!');
@@ -94,16 +102,16 @@ const Create = () => {
         }
       }
       files.forEach((file) => {
-        console.log("Files"+file);
+        console.log("Files" + file);
         formDataToAppend.append('images', file);
       });
       console.log(data)
       const token = localStorage.getItem('token');
 
       // Display the key/value pairs
-    for (var pair of formDataToAppend.entries()) {
-      console.group(pair[0]+ ', ' + pair[1]); 
-    }
+      for (var pair of formDataToAppend.entries()) {
+        console.group(pair[0] + ', ' + pair[1]);
+      }
 
 
       const response = await axios.post(
@@ -116,7 +124,7 @@ const Create = () => {
           },
           withCredentials: true
         }
-      ); 
+      );
 
       if (response.status === 200) {
         toast.success('Property created successfully!');
@@ -125,7 +133,7 @@ const Create = () => {
       }
     } catch (error) {
       console.error('Error creating property:', error);
-      
+
       toast.error('Failed to create property. Please try again later.');
     }
   };
@@ -133,11 +141,13 @@ const Create = () => {
 
   return (
     <div>
-      <p className="font-mono font-bold text-5xl text-center ml-[5vh] flex">
-        List your Property !!
-      </p>
-      <div className="addLists flex mt-[6vh]">
-        <div className="property-listing flex bg-red-50 h-auto w-[55%] -mt-1  ml-[60px] border-2 border-red-300 float-left pt-5 pl-5 pr-5">
+      <div className="flex justify-center mt-2">
+        <p className="font-mono font-bold text-3xl text-cente  shadow-2xl drop-shadow-2xl ml-[5vh] flex">
+          List your Property !!
+        </p>
+      </div>
+      <div className="addLists flex mt-[6vh] justify-center mr-16">
+        <div className="property-listing flex px-2 shadow-2xl drop-shadow-3xl bg-slate-200 h-auto w-[60%] -mt-1  ml-[60px] border-2  float-left pt-5 pl-5 pr-5">
           <div className="first pl-10 mt-1">
             <form action="/create" method="POST" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex">
@@ -237,12 +247,13 @@ const Create = () => {
                   />
                   <br />
                 </div>
-                <div className="right ml-[9rem]">
-                  <div className="radios flex justify-around mb-3">
+                <div className=" ml-[9rem]">
+                  <div className="radios flex justify-evenly mb-3 ">
                     <input
                       type="radio"
                       id="Land"
                       value='Land'
+
                       {...register("propertyName", { required: true })
                       }
                     />
@@ -279,7 +290,7 @@ const Create = () => {
                   <label htmlFor="description">Description</label>
                   <br />
                   <textarea
-                    className="form-control mb-6"
+                    className="form-control mb-6 w-full border-[ border-black"
                     id="description"
                     {...register("description", { required: true })}
                     cols="50"
@@ -314,16 +325,62 @@ const Create = () => {
                   </div>
                 </div>
               </div>
-            
-            <div className="flex">
-              <button className="rent-button" type="submit">
-                Post
-              </button>
-            </div>
+
+              <div className="flex">
+                <button className="rent-button" type="submit">
+                  Post
+                </button>
+              </div>
             </form>
           </div>
         </div>
       </div>
+      <Model
+        isOpen={isVisible}
+        onRequestClose={() => setIsVisible(false)}
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          },
+          content: {
+            top: '8rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            height: "75%",
+            width: "80%",
+            borderRadius: "25px",
+            animation: "fade-in 5s forwards",
+            transition: "top 1s ease-out",
+            display: "flex",
+            flexDirection: "column" // Ensure the content inside the modal is in a column layout
+          }
+        }}
+      >
+        <div className="image-div flex sticky relative">
+          <button onClick={() => setIsVisible(false)} className='text-3xl px-3 w-10 absolute right-5 top-1'>
+            <FontAwesomeIcon icon={faXmark}
+              style={{ color: 'black', paddingTop: "10px" }}
+              className='-mt-1 cursor-pointer relative'
+              onClick={() => setIsVisible(false)}
+            />
+          </button>
+        </div>
+        <div className="text-2xl font-semibold flex justify-center">Selected Images</div>
+        <div className="top-div overflow-auto flex flex-wrap justify-around mt-8 h-[70%] bg-slate-100">
+          {/* Make the container scrollable */}
+          {images.map((file, index) => (
+            <img key={index} src={URL.createObjectURL(file)} alt={`Image ${index}`} className="h-[24rem] px-10 py-10" />
+          ))}
+        </div>
+        <div className="lowest-bottom flex justify-center">
+          <button className="action-btn upload-here mt-12 w-[20%] h-10 bg-red-400 border  mx-1 px-5 py-1 rounded-xl text-white hover:bg-red-600 hover:text-white hover:transition-all delay-[50ms] hover:outline outline-blue-100  text-lg outline-[3.5px]"
+            type="button"
+            onClick={()=>setIsVisible(false)}>
+            Upload
+          </button>
+        </div>
+      </Model>
+
     </div>
   );
 };

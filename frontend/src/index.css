@@ -5,7 +5,9 @@
 .form {
   @apply border-solid border-stone-950 border-[1.5px] ml-[30vh] mt-[10vh] pt-10 pl-10 w-[28vw] text-black bg-white shadow-2xl drop-shadow-2xl
 }
-
+.form-admin {
+   
+}
 .sign-up {
   @apply border-solid border-stone-950 border-[1.5px] ml-[30vh] mt-[5vh] pt-10 pl-10 h-[75vh] w-[28vw] text-black bg-white shadow-2xl drop-shadow-2xl
 }
@@ -30,6 +32,10 @@ input[type="file"] {
   @apply w-[15vw]
 }
 
+input[type='radio']{
+  @apply inline-block scale-150 mx-2 ml-4 
+}
+
 .input-listings, input[type="number"] {
   @apply mb-3 p-[3vw] py-1 w-[20vw] h-9 border border-black rounded-lg outline-blue-500 placeholder:text-center;
 
@@ -37,6 +43,12 @@ input[type="file"] {
 
 .input-button {
   @apply text-white bg-green-500 w-[24vw] mt-4 mb-10 py-2 rounded-md
+}
+.input-button-log {
+  @apply text-white bg-orange-400 w-[24vw] mt-4 mb-10 py-2 rounded-md
+}
+.input-button-log:hover {
+  @apply bg-orange-500 transition-all delay-75 outline-gray-500 /* Adjust the delay time as needed */
 }
 
 .rent-button {

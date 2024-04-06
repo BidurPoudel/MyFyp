@@ -2,10 +2,11 @@ import React from 'react'
 import Modal from 'react-modal';
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { Route, RouterProvider, createBrowserRouter, useNavigate } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter, useNavigate } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import Layout from './layouts/Layout.jsx'
+import AdminSidebarLayout from './layouts/AdminSidebarLayout.jsx';
 import Home from './pages/Home.jsx'
 import Create from './pages/Create.jsx'
 import Properties from './pages/Properties.jsx'
@@ -14,7 +15,7 @@ import SignUp from './pages/Signup.jsx'
 import Dashboard from './layouts/Dashboard.jsx'
 import OwnerProperty from './pages/user-dashboard/OwnerProperty.jsx'
 import Chat from './pages/user-dashboard/Chat.jsx'
-import Payment from './pages/user-dashboard/Payment.jsx'
+import Payment from './pages/admin-dashboard/Payment.jsx'
 import Setting from './pages/user-dashboard/Setting.jsx'
 import PropertyDetails from './pages/PropertyDetails.jsx'
 import Cookies from 'js-cookie';
@@ -22,6 +23,13 @@ import { store, persistor } from './app/store.jsx'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react';
 import UpdateProperty from './pages/user-dashboard/UpdateProperty.jsx';
+import AllUser from './pages/admin-dashboard/AllUser.jsx';
+import AdminLogin from './pages/admin-dashboard/AdminLogin.jsx';
+import AdminSignUp from './pages/admin-dashboard/AdminSignUp.jsx';
+import AllProperties from './pages/admin-dashboard/AllProperties.jsx';
+import AllRent from './pages/admin-dashboard/AllRent.jsx';
+import AdminDashboard from './pages/admin-dashboard/AdminDashboard.jsx';
+import ReportGeneration from './pages/admin-dashboard/Report.jsx';
 Modal.setAppElement('#root');
 const ProtectedRoute = (props) => {
   const { route } = props
@@ -32,6 +40,8 @@ const ProtectedRoute = (props) => {
   }
 }
 
+
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -40,7 +50,7 @@ const router = createBrowserRouter([
       { path: "/login", element: <Login /> },
       { path: "/signup", element: <SignUp /> },
       { path: "/logout", element: <Login /> },
-      { path: "/", element: <Home/> },
+      { path: "/", element: <Home /> },
       { path: "/create", element: <Create /> },
       { path: "/properties", element: <Properties /> },
       { path: "/properties/:propertyId", element: <PropertyDetails /> },
@@ -48,22 +58,44 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: '/dashboard/',
+    path: '/owner/',
     element: <Dashboard />,
     children: [
-      { path: 'property', element: <OwnerProperty /> },
+      { path: '', element: <OwnerProperty /> },
       { path: 'chat', element: <Chat /> },
       { path: 'payment', element: <Payment /> },
       { path: 'setting', element: <Setting /> },
-      {path: 'update-property/:propertyId', element:<UpdateProperty/>}
+      { path: 'update-property/:propertyId', element: <UpdateProperty /> }
 
     ]
+  },
+  {
+    path: '/admin/login',
+    element: <AdminLogin />,
+  },
+  {
+    path: '/admin/signup',
+    element: <AdminSignUp />,
+  },
+  {
+    path: '/admin',
+    element: <AdminSidebarLayout/>,
+    children:[
+      {path: 'dashboard', element: <AdminDashboard/>},
+      {path: 'all-user', element: <AllUser/>},
+      {path: 'all-properties', element: <AllProperties/>},
+      {path: 'rents', element: <AllRent/>},
+      {path: 'payment', element: <Payment/>},
+      {path: 'report', element: <ReportGeneration/>},
+    ]
   }
+
 ])
 ReactDOM.createRoot(document.getElementById('root')).render(
   <PersistGate persistor={persistor}>
     <Provider store={store}>
       <RouterProvider router={router} />
+
       <ToastContainer
         position="top-right"
         autoClose={2000}

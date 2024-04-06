@@ -11,7 +11,7 @@ const Sidebar = () => {
           <img src={logo} alt="Logo" />
         </div>
         <div className="flex flex-col text-lg">
-          <NavLink to="property"
+          <NavLink to="/owner"
             className={({ isActive }) => `
             p-[10px] px-[90px] py-[20px] duration-200 block
             ${isActive ? "text-white duration-75 bg-blue-500 " : "text-black"} 

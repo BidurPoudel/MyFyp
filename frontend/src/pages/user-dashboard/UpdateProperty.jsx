@@ -149,7 +149,7 @@ const UpdateProperty = () => {
     };
 
     return (
-        <div className='m-10 p-10 bg-red-200 w-full'>
+        <div className='m-10 p-10 bg-slate-200 w-full'>
             <form action="/dashboard/update-property/74" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex">
                     <div className="left">

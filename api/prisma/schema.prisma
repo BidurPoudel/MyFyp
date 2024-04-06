@@ -28,7 +28,7 @@ model Property {
   propertyType    PropertyType    @relation(fields: [propertyTypeId], references: [propertyTypeId])
   images          PropertyImage[]
   rent            Rent[]
-  payment         Payment[]
+  reports         Report[]   
 }
 
 model User {
@@ -40,6 +40,7 @@ model User {
   property    Property[]
   rent        Rent[]
   payment     Payment[]
+  reportedeports Report[]
 }
 
 model PropertyType {
@@ -71,5 +72,21 @@ model Payment {
   propertyId    Int
   paymentDate   DateTime @default(now())
   owner         User     @relation(fields: [ownerId], references: [userId])
-  property      Property @relation(fields: [propertyId], references: [propertyId])
+}
+
+model Report {
+  reportId     Int      @id @default(autoincrement()) @unique
+  userId       Int
+  propertyId   Int
+  reportReason String
+  reportedAt   DateTime @default(now())
+  reporter     User     @relation(fields: [userId], references: [userId])
+  property     Property @relation(fields: [propertyId], references: [propertyId])
+}
+
+model Admin {
+  adminId       Int       @id @default(autoincrement())
+  username      String    @unique
+  email         String    @unique
+  password      String
 }
