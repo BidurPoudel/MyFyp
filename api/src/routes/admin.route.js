@@ -9,8 +9,10 @@ const adminRoute = Router();
 adminRoute.post('/createPropertyType', adminRoleController.createPropertyType);
 adminRoute.post('/addPropertyType', adminRoleController.addNewPropertyType)
 adminRoute.put('/updatePropertyType/:propertyTypeId', adminRoleController.updatePropertyTypeById);
-adminRoute.get('/allusers', adminController.getAllUsers);
-adminRoute.delete('/:userId', adminController.deletUserbyId)
+adminRoute.get('/allUsers', adminController.getAllUsers);
+adminRoute.get('/allProperties', adminController.getAllProperties);
+adminRoute.delete('/users/:userId', adminController.deleteUserById)
+adminRoute.delete('/properties/:propertyId', adminController.deletePropertyById)
 
 
 export default adminRoute;
