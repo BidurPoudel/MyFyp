@@ -13,6 +13,7 @@ adminRoute.get('/allUsers', adminController.getAllUsers);
 adminRoute.get('/allProperties', adminController.getAllProperties);
 adminRoute.delete('/users/:userId', adminController.deleteUserById)
 adminRoute.delete('/properties/:propertyId', adminController.deletePropertyById)
+adminRoute.delete('/rent/:propertyId', adminController.deleteRentedPropertyById)
 
 
 export default adminRoute;

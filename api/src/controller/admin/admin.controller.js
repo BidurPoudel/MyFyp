@@ -123,6 +123,34 @@ class AdminController {
         }
     }
     
+    deleteRentedPropertyById = async (req, res) => {
+        const { propertyId } = req.params;
+    
+        try {
+            const property = await prisma.property.findUnique({
+                where: { propertyId: parseInt(propertyId) },
+                include: { rent: true }
+            });
+    
+            if (!property) {
+                return res.status(404).json({ error: 'Property not found' });
+            }
+    
+            if (property.rent.length === 0) {
+                return res.status(400).json({ error: 'Property is not currently rented' });
+            }
+    
+            await prisma.rent.deleteMany({
+                where: { propertyId: parseInt(propertyId) },
+            });
+    
+            res.json({ message: 'Successfully deleted rented property' }); 
+        } catch (error) {
+            console.error('Error deleting rented property:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+    
     
 }
 export const adminController = new AdminController();
