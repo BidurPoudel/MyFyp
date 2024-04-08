@@ -30,6 +30,7 @@ import AllProperties from './pages/admin-dashboard/AllProperties.jsx';
 import AllRent from './pages/admin-dashboard/AllRent.jsx';
 import AdminDashboard from './pages/admin-dashboard/AdminDashboard.jsx';
 import ReportGeneration from './pages/admin-dashboard/Report.jsx';
+import CheckoutSuccess from './components/CheckoutSuccess.jsx';
 Modal.setAppElement('#root');
 const ProtectedRoute = (props) => {
   const { route } = props
@@ -44,13 +45,20 @@ const ProtectedRoute = (props) => {
 
 const router = createBrowserRouter([
   {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/signup',
+    element: <SignUp />,
+  },
+  {
     path: '/',
     element: <Layout />,
     children: [
-      { path: "/login", element: <Login /> },
-      { path: "/signup", element: <SignUp /> },
       { path: "/logout", element: <Login /> },
       { path: "/", element: <Home /> },
+      {path:'checkout-success', element:<CheckoutSuccess/>},
       { path: "/create", element: <Create /> },
       { path: "/properties", element: <Properties /> },
       { path: "/properties/:propertyId", element: <PropertyDetails /> },
@@ -62,7 +70,6 @@ const router = createBrowserRouter([
     element: <Dashboard />,
     children: [
       { path: '', element: <OwnerProperty /> },
-      { path: 'chat', element: <Chat /> },
       { path: 'payment', element: <Payment /> },
       { path: 'setting', element: <Setting /> },
       { path: 'update-property/:propertyId', element: <UpdateProperty /> }

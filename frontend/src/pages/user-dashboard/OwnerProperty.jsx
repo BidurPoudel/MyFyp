@@ -79,7 +79,7 @@ const OwnerProperty = () => {
         <div className='flex space-x-2'>
           <NavLink
             to={`/owner/update-property/${row.propertyId}`}
-            className="text-white bg-transparent text-lg border-[0.5px] border-black px-4 py-1 w-[6rem]  float-left bg-green-500  hover:bg-green-600 transition-all h-[5%] rounded-md"
+            className="text-white text-lg border-[0.5px] border-black px-4 py-1 w-[6rem]  float-left bg-green-500  hover:bg-green-600 transition-all h-[5%] rounded-md"
           >
             Update
           </NavLink>

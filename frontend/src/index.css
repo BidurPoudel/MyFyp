@@ -9,7 +9,7 @@
    
 }
 .sign-up {
-  @apply border-solid border-stone-950 border-[1.5px] ml-[30vh] mt-[5vh] pt-10 pl-10 h-[75vh] w-[28vw] text-black bg-white shadow-2xl drop-shadow-2xl
+  @apply border w-full mt-[5vh] px-[9.5rem] py-[3rem]
 }
 
 input, ::placeholder, label {
@@ -37,7 +37,7 @@ input[type='radio']{
 }
 
 .input-listings, input[type="number"] {
-  @apply mb-3 p-[3vw] py-1 w-[20vw] h-9 border border-black rounded-lg outline-blue-500 placeholder:text-center;
+  @apply mb-3 p-[3vw] py-4 w-[20vw] h-9 border border-black rounded-lg outline-blue-500 placeholder:text-center;
 
 }
 

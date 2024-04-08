@@ -1,69 +1,40 @@
 import prisma from "../../../prisma/index.js";
 import axios from 'axios';
+import Stripe from 'stripe';
 
-class PaymentController{
- paymentRequestInitiate = async (formData, req, res) => {
+class PaymentController {
+  paymentInitiate = async (amount, formData, req, res) => {
     try {
-        const headers = {
-          Authorization: `test_secret_key_56cfab56a18f4102b40d66dcb038b71e`,
-          "Content-Type": "application/json",
-        };
-        console.log(headers);
-        const response = await axios.post(
-          "https://a.khalti.com/api/v2/epayment/initiate/",
-          formData,
+      const stripe = new Stripe('sk_test_51P2s3xSAPstj23SmLhHIKSi9UI7N6DQ0xZoOYYY2Mc4IBfe3enk4CqJXbFwqQaPXACaMcGjkKnZACaGbxuCuHzVT00TDDMSEX1', {
+        apiVersion: '2020-08-27', // specify your desired Stripe API version
+      });
+
+      const amountInCents = amount * 100;
+
+      const session = await stripe.checkout.sessions.create({
+        line_items: [
           {
-            headers,
-          }
-        );
-        console.log(response.data);
-        console.log(response.data.payment_url);
-        res.json({
-          message: "khalti success",
-          payment_method: "khalti",
-          data: response.data,
-        });
-      } catch (err) {
-        console.log(err);
-        return res.status(400).json({ error: err?.message });
-      }
-    }; catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Payment failed' });
+            price_data: {
+              currency: 'usd', // Stripe expects amounts in USD
+              unit_amount: amountInCents, // Amount converted to cents
+              product_data: {
+                name: 'Your Product Name', // Provide a name for your product
+              },
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `http://127.0.0.1:5173/checkout-success`,
+        cancel_url: `http://127.0.0.1:5173/properties`,
+      });
+
+      res.send({ url: session.url });
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-
-    handleKhaltiCallback = async (req, res, next) => {
-        try {
-          const { pidx, amount, purchase_order_id, transaction_id, message } =
-            req.query;
-          if (message) {
-            return res
-              .status(400)
-              .json({ error: message || "Error Processing Khalti" });
-          }
-      
-          const headers = {
-            Authorization: `Key ${process.env.secretKey}`,
-            "Content-Type": "application/json",
-          };
-          const response = await axios.post("https://a.khalti.com/api/v2/epayment/lookup/", { pidx },{headers});
-      
-          console.log(response.data);
-          if (response.data.status !== "Completed") {
-            return res.status(400).json({ error: "Payment not completed" });
-          }
-      
-          console.log(purchase_order_id,pidx);
-          req.transaction_uuid = purchase_order_id;
-          req.transaction_code = pidx;
-          next();
-        } catch (err) {
-          console.log(err);
-          return res
-            .status(400)
-            .json({ error: err?.message || "Error Processing Khalti" });
-        }
-      };
   }
+}
 
-export const paymentController = new PaymentController()
+export const paymentController = new PaymentController();

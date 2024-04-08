@@ -5,7 +5,7 @@ const OwnerPropertiesTable = () => {
   
   return (
     <div>
-      OwnerPropertiesTable
+      
     </div>
   )
 }

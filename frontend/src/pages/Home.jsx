@@ -11,7 +11,7 @@ import { faUsers, faBuildingUser, faBuildingCircleCheck, faArrowRight } from '@f
 import Footer from '../layouts/Footer/Footer';
 
 const Home = () => {
-  const [token, setToken] = useState(null);
+  // const [token, setToken] = useState(null);
   const totalUser = 20;
   const totalProperty = 10;
   const totalRent = 6;
@@ -26,7 +26,7 @@ const Home = () => {
           <div>
             <p className='mt-5 mx-[7rem] text-5xl tracking-wider font-semibold'>
               Find best properties for
-              <span class="text-blue-600 underline underline-offset-8 mx-[0.75rem] ">
+              <span className="text-blue-600 underline underline-offset-8 mx-[0.75rem] ">
                 Rent</span>
               that <br />suits you</p>
           </div>
@@ -77,7 +77,7 @@ const Home = () => {
           <div className="property-data h-full ">
             <div className='my-5 mx-[35%]'>
               <FontAwesomeIcon icon={faBuildingUser}
-                size='3x  '
+                size='3x'
                 style={{ color: 'black', paddingTop: "10px" }}
                 className='cursor-pointer relative'
                 onClick={() => setOpen(!open)}
@@ -111,7 +111,7 @@ const Home = () => {
             hover:rounded-full -mt-3 hover:outline-1 hover:outline-black'>
               <p className='text-lg'>Explore more</p>
               <FontAwesomeIcon icon={faArrowRight}
-                size='x'
+                size='1x'
                 style={{ color: 'black', paddingTop: "10px" }}
                 className=' cursor-pointer -mt-[0.1rem] mx-2'
                 onClick={() => setOpen(!open)}

@@ -47,20 +47,31 @@ class UserController {
             const validator = vine.compile(loginValidationSchema);
             const payload = await validator.validate(body);
 
+
             if (!payload.email || !payload.password) {
-                throw new Error('please provide proper informatio')
+                return res.status(400).json({ error: 'Both email and password are required' });
 
             }
 
+            if(!payload.password) return res.status(400).json ({error:'please provide password'})
 
             const user = await prisma.user.findUnique({
                 where: {
                     email: payload.email
                 }
             })
+
+            if (!user) {
+                return res.status(401).json({
+                    errors: {
+                        authentication: 'Invalid email or password',
+                    },
+                });
+            }
+
             // console.log(user)
-            console.log('logged in')
             const comparePassword = await bcrypt.compare(payload.password, user.password);
+            // console.log('logged in')
 
             //comparing with hashed password
             if (user) {
@@ -84,7 +95,7 @@ class UserController {
         try {
             const user = req.user.userId
             const userDetails = await prisma.user.findUnique({
-                where: { userId: user},
+                where: { userId: parseInt(user)},
                 select: {
                     username: true,
                     email: true, phoneNumber: true

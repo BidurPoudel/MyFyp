@@ -14,5 +14,5 @@ export const signUpValidationSchema = vine.object({
 
 export const loginValidationSchema = vine.object({
     email: vine.string().email(),
-    password: vine.string().minLength(5).maxLength(100)
+    password: vine.string().minLength(3).maxLength(100)
 })

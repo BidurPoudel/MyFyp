@@ -5,6 +5,6 @@ import { paymentController } from "../controller/client/pyament.controller.js";
 
 const paymentRoute = Router();
 
-paymentRoute.post('/khalti', loginAuthentication, paymentController.paymentRequestInitiate)
+paymentRoute.post('/create-checkout-session', paymentController.paymentInitiate)
 
 export default paymentRoute;

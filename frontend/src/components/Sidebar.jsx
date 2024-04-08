@@ -20,32 +20,13 @@ const Sidebar = () => {
               transition: "0.23s ease"
             })}
           >Property</NavLink>
-          <NavLink to="chat"
-            className={({ isActive }) => `
-            p-[10px] px-[90px] py-[20px] duration-200 block
-            ${isActive ? "text-white duration-75 bg-blue-500 " : "text-black"} 
-            user-active`}
-            style={({ isactive }) => ({
-              transition: "0.23 ease"
-            })}
-          >Chats</NavLink>
-          <NavLink to="payment"
-            className={ ({isActive})=>`
-            p-[10px] px-[90px] py-[20px] duration-200 block
-            ${isActive?"text-white duration-75 bg-blue-500 ":"text-black" } 
-            user-active`}
-            style={({ isactive }) => ({
-              transition: "0.23s ease",
-
-            })}
-          >Payment</NavLink>
           <NavLink to="setting"
             className={({ isActive }) => `
             p-[10px] px-[90px] py-[20px] duration-200 block
             ${isActive ? "text-white duration-75 bg-blue-500 " : "text-black"} 
             user-active`}
             style={({ isactive }) => ({
-              transition: "b0.23s ease",
+              transition: "0.23 ease"
             })}
           >Settings</NavLink>
           <NavLink to="/"

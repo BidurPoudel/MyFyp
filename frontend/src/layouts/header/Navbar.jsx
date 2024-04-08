@@ -2,37 +2,44 @@ import React, { useState } from 'react';
 import axios from 'axios'
 import logo from '../../assets/logo.png';
 import { NavLink } from 'react-router-dom';
-import KhaltiCheckout from "khalti-checkout-web";
-import config from "../../components/Khalti/KhaltiConfig";
 import Account from '../../utils/Account';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
 const Navbar = () => {
-  let checkout = new KhaltiCheckout(config);
-  
 
-  const handleCreateClick = async () => {
-    const url = "http://localhost:3001/api/payment/khalti";
-    const data = {
-      amount: 100,
-      products: [{ product: "test", amount: 100, quantity: 1 }],
-    };
+  const makePayment = async () => {
     try {
-      const response = await axios.post(url, {
-        headers: {
-          'Content-Type': 'application/json',
-        }, 
-      })
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log(responseData);
-      }else{
-        console.log("Failed to fetch:", response.status, response.statusText);
-      }
+      // Fetch the checkout session from the server
+      const response = await axios.post(
+        'http://localhost:3001/api/payment/create-checkout-session',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming you're using Bearer token authentication
+          },
+          withCredentials: true,
+        }
+      );
+
+      // Extract the session ID from the response data
+      const sessionId = response.data.sessionId;
+
+      // Load Stripe instance with your publishable key
+      const stripe = await loadStripe(
+        'pk_test_51P2s3xSAPstj23SmhxozRn7OTCakBfVINHapD1H9hrcKFBcIZdFFbCR1mWEfty1O3WOsESekqkt1AH3vOk66vAMG00FS5qO0nl'
+      );
+
+      // Redirect to the Stripe Checkout session using the session ID
+      await stripe.redirectToCheckout({
+        sessionId: sessionId,
+      });
     } catch (error) {
-      console.log("Error during fetch:", error);
+      console.error('Error initiating payment:', error);
     }
   };
+
 
   return (
     <>
@@ -54,6 +61,7 @@ const Navbar = () => {
             <li>
               <NavLink
                 to="/properties"
+                
                 className={({ isActive }) => `
                 inline-block sm:p-[10px] pb-[25px] duration-200 font-semibold tracking-[.1em]
                 ${isActive ? "text-white border-b-4 rounded-lg transition-all hover:border-green-500 duration-100 border-green-500" : "text-black"} 
@@ -65,8 +73,7 @@ const Navbar = () => {
             <li>
               {/* create link*/}
               <NavLink
-              to='/create'
-                onClick={handleCreateClick}
+                to='/create'
                 className={({ isActive }) => `
                 inline-block sm:p-[10px] pb-[25px] duration-200 font-semibold tracking-[.1em]
                 ${isActive ? "text-white border-b-4 rounded-lg transition-all duration-75 hover:border-green-500  border-green-500" : "text-black"} 
@@ -76,20 +83,21 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li>
-            <Account />
+              <Account />
             </li>
             <li>
-            <NavLink to='/login'>
-              <FontAwesomeIcon icon={faRightFromBracket}
-                size='xl'
-                style={{ color: '#373737', paddingTop: "15px" }}
-                className='-mt-1 cursor-pointer relative'
-                onClick={() => setOpen(!open)}
-              />
-            </NavLink>
+              <NavLink to='/login'>
+                <FontAwesomeIcon icon={faRightFromBracket}
+                  size='xl'
+                  style={{ color: '#373737', paddingTop: "15px" }}
+                  className='-mt-1 cursor-pointer relative'
+                  onClick={() => setOpen(!open)}
+                />
+              </NavLink>
             </li>
           </ul>
         </div>
+        <button onClick={makePayment}>Click here</button>
       </div>
     </>
   );
