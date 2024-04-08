@@ -1,40 +1,47 @@
 import prisma from "../../../prisma/index.js";
 import axios from 'axios';
-import Stripe from 'stripe';
+import dotenv from 'dotenv';
+dotenv.config();  
 
 class PaymentController {
-  paymentInitiate = async (amount, formData, req, res) => {
+  paymentInitiate = async (req, res) => {
+    const payload = req.body;
+    // console.log(payload)
+    
     try {
-      const stripe = new Stripe('sk_test_51P2s3xSAPstj23SmLhHIKSi9UI7N6DQ0xZoOYYY2Mc4IBfe3enk4CqJXbFwqQaPXACaMcGjkKnZACaGbxuCuHzVT00TDDMSEX1', {
-        apiVersion: '2020-08-27', // specify your desired Stripe API version
+      const response = await axios.post(
+      'https://a.khalti.com/api/v2/epayment/initiate/', payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `key ${process.env.KHALTI_SECRET_KEY}`
+        }
       });
-
-      const amountInCents = amount * 100;
-
-      const session = await stripe.checkout.sessions.create({
-        line_items: [
-          {
-            price_data: {
-              currency: 'usd', // Stripe expects amounts in USD
-              unit_amount: amountInCents, // Amount converted to cents
-              product_data: {
-                name: 'Your Product Name', // Provide a name for your product
-              },
-            },
-            quantity: 1,
-          },
-        ],
-        mode: 'payment',
-        success_url: `http://127.0.0.1:5173/checkout-success`,
-        cancel_url: `http://127.0.0.1:5173/properties`,
-      });
-
-      res.send({ url: session.url });
+      
+      // const {payment_url} = response.data
+      // console.log(payment_url)
+      res.json(response.data);
+      // console.log(`this is payment url: ${payment_url}`)
     } catch (error) {
-      console.error('Error initiating payment:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      console.error(error); 
     }
   }
+//   confirmTransaction = async (publicKey, token, confirmationCode, transactionPin)=> {
+//     try {
+        
+//         const confirmResponse = await axios.post('https://khalti.com/api/v2/payment/confirm/', {
+//             public_key: publicKey,
+//             token: token,
+//             confirmation_code: confirmationCode,
+//             transaction_pin: transactionPin
+//         });
+
+//         console.log('Confirm Transaction Response:', confirmResponse.data);
+//         return confirmResponse.data; // Return the confirmation response
+//     } catch (error) {
+//         console.error('Error confirming transaction:', error.response.data);
+//         throw error; // Propagate the error to be caught by the calling function
+//     }
+// }
 }
 
 export const paymentController = new PaymentController();

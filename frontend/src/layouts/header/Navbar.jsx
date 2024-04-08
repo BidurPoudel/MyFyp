@@ -5,40 +5,9 @@ import { NavLink } from 'react-router-dom';
 import Account from '../../utils/Account';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
-import {Elements} from '@stripe/react-stripe-js';
-import {loadStripe} from '@stripe/stripe-js';
 const Navbar = () => {
 
-  const makePayment = async () => {
-    try {
-      // Fetch the checkout session from the server
-      const response = await axios.post(
-        'http://localhost:3001/api/payment/create-checkout-session',
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming you're using Bearer token authentication
-          },
-          withCredentials: true,
-        }
-      );
-
-      // Extract the session ID from the response data
-      const sessionId = response.data.sessionId;
-
-      // Load Stripe instance with your publishable key
-      const stripe = await loadStripe(
-        'pk_test_51P2s3xSAPstj23SmhxozRn7OTCakBfVINHapD1H9hrcKFBcIZdFFbCR1mWEfty1O3WOsESekqkt1AH3vOk66vAMG00FS5qO0nl'
-      );
-
-      // Redirect to the Stripe Checkout session using the session ID
-      await stripe.redirectToCheckout({
-        sessionId: sessionId,
-      });
-    } catch (error) {
-      console.error('Error initiating payment:', error);
-    }
-  };
+  
 
 
   return (
@@ -97,7 +66,7 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <button onClick={makePayment}>Click here</button>
+        
       </div>
     </>
   );
