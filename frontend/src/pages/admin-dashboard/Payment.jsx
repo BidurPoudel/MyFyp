@@ -9,7 +9,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import OwnerPropertiesTable from '../../components/OwnerPropertiesTable';
 
 const Payment = () => {
-  const { propertyId } = useParams();
+  // const { propertyId } = useParams();
   const [isVisible, setIsVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [deletePropertyId, setDeletePropertyId] = useState(null);
@@ -40,10 +40,24 @@ const Payment = () => {
   }
 
   useEffect(() => {
-    // Assuming you're fetching properties data here and setting it to the state
-   
-    
-  }, []); // Empty dependency array to run only once on component mount
+    const token = localStorage.getItem('token');
+    const fetchProperties = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/admin/allpayments', {
+          headers: {
+            Authorization: token,
+          },
+          withCredentials: true,
+        });
+        console.log(response.data)
+        setRents(response.data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
+
+    fetchProperties();
+  }, []);
 
   const columns = [
     {
@@ -57,9 +71,9 @@ const Payment = () => {
     {
       name: 'User Name',
       selector: (row) => row.name,
-      minWidth: '100px',
+     
       style: {
-        fontSize: '18px',
+        fontSize: '18px', minWidth: '100px',
       },
     },
     {
@@ -77,23 +91,9 @@ const Payment = () => {
         fontSize: '18px',
       },
     },
-    {
-      name: 'Actions',
-      cell: (row) => (
-        <div className='flex space-x-2'>
-          <button
-            className='border border-black w-[6rem] text-lg bg-red-500 text-white hover:bg-red-600 rounded-md'
-            type='button'
-            onClick={() => handleDeleteButton(row.propertyId)}
-          >
-            Delete
-          </button>
-        </div>
-      ),
-      minWidth: '20%',
-    },
   ];
 
+  
   return (
     <div className=' relative  w-[100%]'>
       <div className='flex justify-center mt-16 text-3xl font-semibold'>

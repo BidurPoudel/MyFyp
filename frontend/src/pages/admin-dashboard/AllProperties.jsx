@@ -13,38 +13,41 @@ const AllProperties = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [deletePropertyId, setDeletePropertyId] = useState(null);
-  const data = [
-    {
-      name: 'bidur',
-      email: 'bidur@gmail.com',
-      contactNumber: '9846711347',
-    },
-    {
-      name: 'shyam',
-      email: '@gmail.com',
-      contactNumber: '9846711347',
-    },
-    {
-      name: 'shyam',
-      email: 'shyam@gmail.com',
-      contactNumber: '9846711347',
-    },
-    {
-      name: 'ram',
-      email: 'ram@gmail.com',
-      contactNumber: '9846711347',
-    },
-  ];
-  async function handleDeleteButton(){
+  
+  async function handleDeleteButton(propertyId){
     setIsVisible(true)
+    setDeletePropertyId(propertyId)
   }
 
+  async function handleDelete(id){
+    try {
+      await axios.delete(`http://localhost:3001/api/admin/properties/${id}`);
+      window.location.reload();
+    } catch (error) {
+      console.log('Error deleting property:', error);
+    }
+  }
   useEffect(() => {
-    // Assuming you're fetching properties data here and setting it to the state
-   
-    
-  }, []); // Empty dependency array to run only once on component mount
+    const token = localStorage.getItem('token');
+    const fetchProperties = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/admin/allProperties', {
+          headers: {
+            Authorization: token,
+          },
+          withCredentials: true,
+        });
+        console.log(response.data)
+        setProperties(response.data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
 
+    fetchProperties();
+  }, []);
+
+  
   const columns = [
     {
       name: 'S.No',
@@ -55,24 +58,52 @@ const AllProperties = () => {
       },
     },
     {
-      name: 'User Name',
-      selector: (row) => row.name,
+      name: 'Property',
+      selector: (row) => row.propertyType.propertyName,
       minWidth: '100px',
       style: {
         fontSize: '18px',
       },
     },
     {
-      name: 'Email Address',
-      selector: (row) => row.email,
+      name: 'Address',
+      selector: (row) => row.address,
       minWidth: '250px',
       style: {
         fontSize: '18px',
       },
     },
     {
-      name: 'Contact number',
-      selector: (row) => row.contactNumber,
+      name: 'Area',
+      selector: (row) => row.area,
+      style: {
+        fontSize: '18px',
+      },
+    },
+    {
+      name: 'Price',
+      selector: (row) => row.price,
+      style: {
+        fontSize: '18px',
+      },
+    },
+    {
+      name: 'Rooms',
+      selector: (row) => row.numberOfRooms,
+      style: {
+        fontSize: '18px',
+      },
+    },
+    {
+      name: 'Flats',
+      selector: (row) => row.numberOfFlats,
+      style: {
+        fontSize: '18px',
+      },
+    },
+    {
+      name: 'Shutters',
+      selector: (row) => row.numberOfShutter,
       style: {
         fontSize: '18px',
       },
@@ -97,17 +128,17 @@ const AllProperties = () => {
   return (
     <div className=' relative  w-[100%]'>
       <div className='flex justify-center mt-16 text-3xl font-semibold'>
-        Data of All Users
+        Data of Properties
       </div>
       <div>
       <div className='flex relative mt-10 w-full bg-red-200'>
-        <div className='absolute flex justify-center w-[50%] left-[25rem] mt-3 -top-11 text-xl'>Total users</div>
+        <div className='absolute flex justify-center w-[50%] left-[25rem] mt-3 -top-11 text-xl'>Total properties: {properties.length}</div>
       </div>
         <div className='w-[75%] mx-[4rem] absolute top-48 left-20'>
           <DataTable
             responsive={true}
             columns={columns}
-            data={data} // Use the 'data' array here
+            data={properties} // Use the 'data' array here
             pagination
             subHeader
             subHeaderComponent={

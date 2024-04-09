@@ -3,7 +3,15 @@ import prisma from "../../../prisma/index.js";
 class AdminController {
     getAllUsers = async (req, res) => {
         try {
-            const users = await prisma.user.findMany();
+            const users = await prisma.user.findMany({
+                select: {
+                    userId: true,
+                    username: true,
+                    email: true,
+                    phoneNumber: true,
+                    password:false
+                }
+            });
             res.json(users);
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -123,6 +131,30 @@ class AdminController {
         }
     }
     
+    getAllRentedProperties= async (resq, res)=>{
+        try {
+
+
+            const rentedProperties = await prisma.rent.findMany({
+                include:{
+                    property: {
+                        include:{
+                            owner: true,
+                            propertyType:true
+                        }
+                    },
+                    tenant: true,
+                }
+            })
+            console.log(rentedProperties)
+            res.json(rentedProperties)
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
+    
+
     deleteRentedPropertyById = async (req, res) => {
         const { propertyId } = req.params;
     
@@ -147,6 +179,48 @@ class AdminController {
             res.json({ message: 'Successfully deleted rented property' }); 
         } catch (error) {
             console.error('Error deleting rented property:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
+    getAllPaymentDetails = async (req, res)=>{
+        try {
+            const payments = await prisma.payment.findMany({
+                include:{
+                    owner: true
+                }
+            })
+            res.json(payments)
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
+    getAllReportedProperties = async (req,res)=>{
+        try {
+            const allReportedProperties = await prisma.report.findMany({
+                include:{
+                    reporter: true,
+                    property: true
+                }
+            })
+            res.json(allReportedProperties)
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
+    deleteReportedProperties = async (req, res)=>{
+        try {
+            const { propertyId } = req.params;
+        const deleteProperties = await prisma.report.deleteMany({
+            where: {
+                propertyId: parseInt(propertyId)
+            }
+        });
+        res.status(200).json({ message: 'Reported properties deleted successfully' });
+        } catch (error) {
+            console.log(error)
             res.status(500).json({ error: 'Internal server error' });
         }
     }

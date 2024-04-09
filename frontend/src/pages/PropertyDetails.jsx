@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faWarning } from '@fortawesome/free-solid-svg-icons'
+import { faWarning,faTimes } from '@fortawesome/free-solid-svg-icons'
+import Model from 'react-modal';
+
 import PropertyCard from '../components/PropertyCard.jsx'
 import { useParams } from 'react-router'
 import { useNavigate } from "react-router-dom";
@@ -9,15 +11,17 @@ import {  Zoom, toast } from 'react-toastify';
 
 const PropertyDetails = () => {
     const [propertyDetails, setPropertyDetails] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
+
     const [isOwner, setIsOwner] = useState(false);
     const [rentProperty, setRentProperty]= useState([])
     const token = localStorage.getItem('token');
+
     const { propertyId } = useParams();
-    console.log(propertyId)
-    console.log(typeof(propertyId))
     const navigate= useNavigate()
     const apiUrl = `http://localhost:3001/api/properties/${propertyId}`;
     const rentUrl = `http://localhost:3001/api/properties/rent/${propertyId}`;
+    const reportUrl = `http://localhost:3001/api/properties//report/${propertyId}`;
     const imagesUrl = 'http://localhost:3001/uploads/';
 
     const getApiURL = async (url) => {
@@ -70,8 +74,50 @@ const PropertyDetails = () => {
         }
     }
 
-    
+    const handleReportButton = async ()=>{
+        const token = localStorage.getItem('token')
+        console.log(` clicked ${propertyId} \n ${token}`)
+        try {
+            const response = await axios.post(reportUrl,{}, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: token
+                },
+                withCredentials: true
+            });
+            if(response.status===200){
+               
+                navigate('/properties')
+            }
+            toast.success('Property Reported successfully', {
+                position: "top-right",
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                theme: "light",
+                transition: Zoom,
+              })
+            if(response.data === 400){
+                toast.error(error.response.data.errors);
+            }
+            setIsVisible(false)
+        } catch (error) {
+            console.log(error);
+            if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.authentication) {
+                toast.error(error.response.data.errors.authentication); // Display error message to user
+              } else {
+                console.log(error); // Log other errors to console
+              }
+              if(response.status === 400){
+                toast.error(response.data.error); // Display the error message sent from the server
+            }
+        }
+    }
     async function ReportButton(){
+        setIsVisible(true)
         console.log(propertyId)
     }
 
@@ -80,8 +126,6 @@ const PropertyDetails = () => {
         
     }, [])
     
-    
-      
 
     return (
         <>
@@ -123,13 +167,14 @@ const PropertyDetails = () => {
                             }
                         </div>
                         <div className="features-icons flex my-5">
-                            <div className="message mt-5">
+                            <div className="message  flex items-center">
                                 <FontAwesomeIcon icon={faWarning}
                                     size='lg'
                                     style={{ color: 'black', paddingTop: "10px", height: "2.5rem" }}
                                     className='-mt-1 cursor-pointer relative'
                                     onClick={ReportButton}
                                 />
+                                <span className="ml-8">Report Property</span>
                             </div>
                         </div>
                     </div>
@@ -159,7 +204,44 @@ const PropertyDetails = () => {
                 </div>
                 <button className='rentButton mb-3' onClick={handleRentButton}>Rent the property</button>
             </div>
-           
+            <Model
+        isOpen={isVisible}
+        onRequestClose={() => setIsVisible(false)}
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          },
+          content: {
+            top: '50px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            height: '39%',
+            width: '40%',
+            borderRadius: '25px',
+            animation: 'fade-in 5s forwards',
+            transition: 'top 1s ease-out',
+          },
+        }}
+      >
+        <div className='model'>
+          <div className='flex justify-around relative'>
+            <h1 className='text-red-500 text-5xl font-bold'>Do you want to Delete???</h1>
+            <button onClick={() => setIsVisible(false)} className='text-3xl px-3 w-10 absolute right-1'>
+              <FontAwesomeIcon icon={faTimes} size='1x' style={{ color: 'black', paddingTop: '10px' }} />
+            </button>
+          </div>
+          <p className='text-lg font-bold my-10 mx-44 w-1/2 h-1/2 text-yello-500 '>This action cannot be undone. we won't let property owner who reported the property</p>
+          <div className='flex relative justify-between w-1/7 my-[4rem] ml-[45px] '>
+            <div className=' absolute right-6 top-6'>
+              <button 
+              className='border border-black bg-yellow-300 mx-1 px-5 py-1 rounded-xl text-black hover:bg-yellow-500 hover:text-black hover:transition-all hover:border-black hover:border-1 delay-[50ms] font-semibold text-lg outline-[3.5px]' 
+              onClick={()=>handleReportButton()}
+              >Report</button>
+              <button className='mx-1 px-5 py-1 font-semibold rounded-xl border border-black bg-gray-300 ' onClick={() => setIsVisible(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      </Model>
         </>
     )
 }

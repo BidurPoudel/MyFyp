@@ -66,6 +66,15 @@ const AdminSidebar = () => {
               transition: "0.23s ease",
             })}
           >Reported Properties</NavLink>
+          <NavLink to="/admin/login"
+            className={({ isActive }) => `
+            p-[10px] pl-14 py-[20px] duration-200 block
+            ${isActive ? "text-white duration-75 bg-orange-500 " : "text-black"} 
+            user-active`}
+            style={({ isactive }) => ({
+              transition: "0.23s ease",
+            })}
+          >Login</NavLink>
         </div>
       </div>
     </>

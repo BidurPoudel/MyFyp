@@ -11,39 +11,32 @@ import OwnerPropertiesTable from '../../components/OwnerPropertiesTable';
 const AllRent = () => {
   const { propertyId } = useParams();
   const [isVisible, setIsVisible] = useState(false);
-  const [properties, setProperties] = useState([]);
+  const [rents, setRents] = useState([]);
   const [deletePropertyId, setDeletePropertyId] = useState(null);
-  const data = [
-    {
-      name: 'bidur',
-      email: 'bidur@gmail.com',
-      contactNumber: '9846711347',
-    },
-    {
-      name: 'shyam',
-      email: '@gmail.com',
-      contactNumber: '9846711347',
-    },
-    {
-      name: 'shyam',
-      email: 'shyam@gmail.com',
-      contactNumber: '9846711347',
-    },
-    {
-      name: 'ram',
-      email: 'ram@gmail.com',
-      contactNumber: '9846711347',
-    },
-  ];
+ 
   async function handleDeleteButton(){
     setIsVisible(true)
   }
 
   useEffect(() => {
-    // Assuming you're fetching properties data here and setting it to the state
-   
-    
-  }, []); // Empty dependency array to run only once on component mount
+    const token = localStorage.getItem('token');
+    const fetchProperties = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/admin/allRents', {
+          headers: {
+            Authorization: token,
+          },
+          withCredentials: true,
+        });
+        console.log(response.data)
+        setRents(response.data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
+
+    fetchProperties();
+  }, []);
 
   const columns = [
     {
@@ -55,24 +48,32 @@ const AllRent = () => {
       },
     },
     {
-      name: 'User Name',
-      selector: (row) => row.name,
+      name: 'Owner Name',
+      selector: (row) => row.property.owner.username,
       minWidth: '100px',
       style: {
         fontSize: '18px',
       },
     },
     {
-      name: 'Email Address',
-      selector: (row) => row.email,
+      name: 'Property Name',
+      selector: (row) => row.property.propertyType.propertyName,
       minWidth: '250px',
       style: {
         fontSize: '18px',
       },
     },
     {
-      name: 'Contact number',
-      selector: (row) => row.contactNumber,
+      name: 'Tenant Name',
+      selector: (row) => row.tenant.username,
+      minWidth: '250px',
+      style: {
+        fontSize: '18px',
+      },
+    },
+    {
+      name: 'Property Address',
+      selector: (row) => row.property.address,
       style: {
         fontSize: '18px',
       },
@@ -107,7 +108,7 @@ const AllRent = () => {
           <DataTable
             responsive={true}
             columns={columns}
-            data={data} // Use the 'data' array here
+            data={rents} // Use the 'data' array here
             pagination
             subHeader
             subHeaderComponent={

@@ -11,39 +11,8 @@ import OwnerPropertiesTable from '../../components/OwnerPropertiesTable';
 const AllUser = () => {
   const { propertyId } = useParams();
   const [isVisible, setIsVisible] = useState(false);
-  const [properties, setProperties] = useState([]);
-  const [deletePropertyId, setDeletePropertyId] = useState(null);
-  const data = [
-    {
-      name: 'bidur',
-      email: 'bidur@gmail.com',
-      contactNumber: '9846711347',
-    },
-    {
-      name: 'shyam',
-      email: '@gmail.com',
-      contactNumber: '9846711347',
-    },
-    {
-      name: 'shyam',
-      email: 'shyam@gmail.com',
-      contactNumber: '9846711347',
-    },
-    {
-      name: 'ram',
-      email: 'ram@gmail.com',
-      contactNumber: '9846711347',
-    },
-  ];
-  async function handleDeleteButton(){
-    setIsVisible(true)
-  }
-
-  useEffect(() => {
-    // Assuming you're fetching properties data here and setting it to the state
-   
-    
-  }, []); // Empty dependency array to run only once on component mount
+  const [users, setUsers] = useState([]);
+  const [deleteUserId, setUserId] = useState(null);
 
   const columns = [
     {
@@ -56,8 +25,8 @@ const AllUser = () => {
     },
     {
       name: 'User Name',
-      selector: (row) => row.name,
-      minWidth: '100px',
+      selector: (row) => row.username,
+      width: '150px',
       style: {
         fontSize: '18px',
       },
@@ -65,14 +34,14 @@ const AllUser = () => {
     {
       name: 'Email Address',
       selector: (row) => row.email,
-      minWidth: '250px',
+      width: '250px',
       style: {
         fontSize: '18px',
       },
     },
     {
       name: 'Contact number',
-      selector: (row) => row.contactNumber,
+      selector: (row) => row.phoneNumber,
       style: {
         fontSize: '18px',
       },
@@ -84,15 +53,53 @@ const AllUser = () => {
           <button
             className='border border-black w-[6rem] text-lg bg-red-500 text-white hover:bg-red-600 rounded-md'
             type='button'
-            onClick={() => handleDeleteButton(row.propertyId)}
+            onClick={() => handleDeleteButton(row.userId)}
           >
             Delete
           </button>
         </div>
       ),
-      minWidth: '20%',
+      width: '20%',
     },
   ];
+  
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const fetchProperties = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/admin/allUsers', {
+          headers: {
+            Authorization: token,
+          },
+          withCredentials: true,
+        });
+        console.log(response.data)
+        setUsers(response.data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
+
+    fetchProperties();
+  }, []);
+  async function handleDeleteButton(userId){
+    setIsVisible(true)
+    setUserId(userId)
+    console.log(`click ${userId}`)
+  }
+
+  async function handleDelete(id) {
+    setIsVisible(false);
+    console.log(`http://localhost:3001/api/admin/users/${id}`)
+    try {
+      await axios.delete(`http://localhost:3001/api/admin/users/${id}`)
+      window.location.reload();
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
 
   return (
     <div className=' relative  w-[100%]'>
@@ -101,14 +108,15 @@ const AllUser = () => {
       </div>
       <div>
       <div className='flex relative mt-10 w-full bg-red-200'>
-        <div className='absolute flex justify-center w-[50%] left-[25rem] mt-3 -top-11 text-xl'>Total users</div>
+        <div className='absolute flex justify-center w-[50%] left-[25rem] mt-3 -top-11 text-xl'>Total users: {users.length}</div>
       </div>
         <div className='w-[75%] mx-[4rem] absolute top-48 left-20'>
           <DataTable
             responsive={true}
             columns={columns}
-            data={data} // Use the 'data' array here
+            data={users} // Use the 'data' array here
             pagination
+            paginationPerPage={10}
             subHeader
             subHeaderComponent={
               <input
@@ -187,7 +195,7 @@ const AllUser = () => {
           <p className='text-2xl font-bold my-10 mx-44 w-1/2 h-1/2 text-red-500'>This action cannot be undone!!!</p>
           <div className='flex relative justify-between w-1/7 my-[4rem] ml-[45px] '>
             <div className=' absolute right-6 top-6'>
-              <button className='action-btn' onClick={() => handleDelete(deletePropertyId)}>
+              <button className='action-btn' onClick={() => handleDelete(deleteUserId)}>
                 Delete
               </button>
               <button

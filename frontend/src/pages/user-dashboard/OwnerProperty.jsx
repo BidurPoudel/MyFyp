@@ -11,7 +11,7 @@ const OwnerProperty = () => {
   const { propertyId } = useParams();
   const [isVisible, setIsVisible] = useState(false);
   const [properties, setProperties] = useState([]);
-  const [deletePropertyId, setDeletePropertyId] = useState(null);
+  const [deletePropertyId,  setDeletePropertyId] = useState(null);
 
   const columns = [
     {

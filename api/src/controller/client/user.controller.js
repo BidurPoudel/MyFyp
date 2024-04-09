@@ -112,17 +112,6 @@ class UserController {
     };
 
 
-    //get route
-    // logout = async (req, res, next) => {
-    //     try {
-    //         res.clearCookie('token');
-    //         res.send('cookie cleared')
-    //         res.json({
-    //             success: true
-    //         })
-    //     } catch (error) {
-    //         throw new Error(error)
-    //     }
-    // }
+   
 }
 export const userController = new UserController();

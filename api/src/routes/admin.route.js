@@ -11,9 +11,13 @@ adminRoute.post('/addPropertyType', adminRoleController.addNewPropertyType)
 adminRoute.put('/updatePropertyType/:propertyTypeId', adminRoleController.updatePropertyTypeById);
 adminRoute.get('/allUsers', adminController.getAllUsers);
 adminRoute.get('/allProperties', adminController.getAllProperties);
-adminRoute.delete('/users/:userId', adminController.deleteUserById)
-adminRoute.delete('/properties/:propertyId', adminController.deletePropertyById)
-adminRoute.delete('/rent/:propertyId', adminController.deleteRentedPropertyById)
+adminRoute.get('/allRents', adminController.getAllRentedProperties);
+adminRoute.get('/allpayments', adminController.getAllPaymentDetails);
+adminRoute.get('/allreportedproperties', adminController.getAllReportedProperties);
+adminRoute.delete('/users/:userId', adminController.deleteUserById);
+adminRoute.delete('/properties/:propertyId', adminController.deletePropertyById);
+adminRoute.delete('/rent/:propertyId', adminController.deleteRentedPropertyById);
+adminRoute.delete('/report/:propertyId', adminController.deleteReportedProperties);
 
 
 export default adminRoute;

@@ -78,7 +78,6 @@ model Report {
   reportId     Int      @id @default(autoincrement()) @unique
   userId       Int
   propertyId   Int
-  reportReason String
   reportedAt   DateTime @default(now())
   reporter     User     @relation(fields: [userId], references: [userId])
   property     Property @relation(fields: [propertyId], references: [propertyId])
