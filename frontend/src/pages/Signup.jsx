@@ -40,7 +40,7 @@ const SignUp = () => {
           transition: Zoom,
         })
       }
-      navigate('/')
+      navigate('/login')
     } catch (error) {
       if (error) {
         if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.authentication) {

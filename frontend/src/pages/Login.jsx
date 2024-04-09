@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Cookies from 'js-cookie';
+;
 import Model from 'react-modal'
 import login from "../assets/login.jfif";
 import { useForm } from "react-hook-form";
@@ -7,9 +7,7 @@ import axios from 'axios';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { Bounce, Zoom, toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
-import { useDispatch } from 'react-redux'
-import { signIn } from '../features/user/userSlice';
-import { setCredentials } from '../features/authentication/authSlice'
+
 
 const Login = () => {
   const [isVisible, setIsVisible] = useState(true)
@@ -25,7 +23,7 @@ const Login = () => {
     password: ''
   })
 
-  const dispatch = useDispatch();
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -48,8 +46,6 @@ const Login = () => {
       const token = response.data.token;
       localStorage.setItem('token', token);
       if (response.status === 200) {
-        dispatch(signIn(value))
-        // dispatch(setCredentials())
         navigate('/')
       }
       console.log(jwtDecode(token))

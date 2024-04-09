@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios'
 import logo from '../../assets/logo.png';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Account from '../../utils/Account';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 const Navbar = () => {
 
   
-
+const handleLogout = async()=>{
+  const token = localStorage.removeItem('token');
+  const navigate = useNavigate();
+  navigate('/')
+}
 
   return (
     <>
@@ -60,7 +64,7 @@ const Navbar = () => {
                   size='xl'
                   style={{ color: '#373737', paddingTop: "15px" }}
                   className='-mt-1 cursor-pointer relative'
-                  onClick={() => setOpen(!open)}
+                  onClick={()=>handleLogout()}
                 />
               </NavLink>
             </li>

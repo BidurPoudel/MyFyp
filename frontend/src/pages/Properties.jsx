@@ -26,7 +26,7 @@ const Properties = () => {
   return (
     <>
       <SortButton />
-      <div className="card flex">
+      <div className="card flex flex-wrap">
         {
           allData.map((data) => (
             <PropertyCard

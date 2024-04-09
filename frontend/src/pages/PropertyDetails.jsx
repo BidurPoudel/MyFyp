@@ -64,6 +64,9 @@ const PropertyDetails = () => {
               } else {
                 console.log(error); // Log other errors to console
               }
+              if(response.status === 400){
+                toast.error(response.data.error); // Display the error message sent from the server
+            }
         }
     }
 

@@ -29,7 +29,7 @@ class RentController{
                     tenant:{connect:{userId: parseInt(tenantId)}}
                 }
             })
-            console.log("property is rented")
+            // console.log("property is rented")
             res.status(200).json(propertyRent);
 
             const availability = await prisma.property.update({

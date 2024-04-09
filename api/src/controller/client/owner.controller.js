@@ -8,7 +8,6 @@ class OwnerController{
             if(!userId) console.log('not logged in!!');
             const properties = await prisma.property.findMany({
                 where: {
-                    isAvailable: true,
                     ownerId: userId,
                 },
                 include: {
