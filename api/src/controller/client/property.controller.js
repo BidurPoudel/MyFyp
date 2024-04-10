@@ -290,13 +290,10 @@ class PropertyController {
         try {
             const { propertyId } = req.params;
             const userId = req.user.userId;
-
-            // Check if the user is logged in
             if (!userId) {
                 return res.status(401).json({ message: "Please log in first" });
             }
 
-            // Delete associated images of the property
             await prisma.propertyImage.deleteMany({
                 where: {
                     propertyId: parseInt(propertyId)
@@ -307,15 +304,12 @@ class PropertyController {
                     propertyId: parseInt(propertyId)
                 }
             });
-
-            // Delete payments associated with the property
             await prisma.payment.deleteMany({
                 where: {
                     propertyId: parseInt(propertyId)
                 }
             });
 
-            // Delete the property itself
             const deletedProperty = await prisma.property.delete({
                 where: {
                     propertyId: parseInt(propertyId)

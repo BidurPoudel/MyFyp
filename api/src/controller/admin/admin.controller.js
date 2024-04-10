@@ -200,8 +200,29 @@ class AdminController {
         try {
             const allReportedProperties = await prisma.report.findMany({
                 include:{
-                    reporter: true,
-                    property: true
+                    reporter: {
+                        select:{
+                            userId:true,
+                            username: true,
+                            email:true,
+                            phoneNumber: true,
+                            password:false
+                        }
+                    },
+                    property: {
+                        include:{
+                            owner:{
+                                select:{
+                                    userId:true,
+                                    username: true,
+                                    email:true,
+                                    phoneNumber: true,
+                                    password:false
+                                }
+                            },
+                            propertyType:true
+                        }
+                    }
                 }
             })
             res.json(allReportedProperties)
@@ -212,17 +233,37 @@ class AdminController {
 
     deleteReportedProperties = async (req, res)=>{
         try {
-            const { propertyId } = req.params;
-        const deleteProperties = await prisma.report.deleteMany({
-            where: {
-                propertyId: parseInt(propertyId)
+            const {propertyId} = req.params;
+            const property = await prisma.property.findUnique({
+                where: { propertyId: parseInt(propertyId) },
+                include: { rent: true }
+            });
+    
+            if (!property) {
+                return res.status(404).json({ error: 'Property not found' });
             }
-        });
-        res.status(200).json({ message: 'Reported properties deleted successfully' });
-        } catch (error) {
-            console.log(error)
-            res.status(500).json({ error: 'Internal server error' });
-        }
+            await prisma.report.deleteMany({
+                where: { propertyId: parseInt(propertyId) },
+              });
+              
+            await prisma.rent.deleteMany({
+              where: { propertyId: parseInt(propertyId) },
+            });
+            await prisma.propertyImage.deleteMany({
+                where: { propertyId: parseInt(propertyId) },
+              });
+          
+              await prisma.property.delete({
+                where: { propertyId: parseInt(propertyId) },
+              });
+          
+              
+              console.lo
+              res.json('Deleted all the details of property')
+          } catch (error) {
+            console.error('Error deleting reported property:', error);
+            res.status(500).json({ error: 'Internal server error.' });
+          }
     }
     
     

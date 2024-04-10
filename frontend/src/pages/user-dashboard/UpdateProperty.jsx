@@ -138,7 +138,7 @@ const UpdateProperty = () => {
 
             if (response.status === 200) {
                 toast.success('Property Updated successfully!');
-                navigate('/dashboard/property')
+                navigate('/owner/property')
                 
             }
         } catch (error) {

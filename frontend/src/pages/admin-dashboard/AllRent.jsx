@@ -15,7 +15,8 @@ const AllRent = () => {
   const [deletePropertyId, setDeletePropertyId] = useState(null);
  
   async function handleDeleteButton(){
-    setIsVisible(true)
+    setIsVisible(true);
+    console.log('clicked', propertyId)
   }
 
   useEffect(() => {
@@ -94,7 +95,14 @@ const AllRent = () => {
       minWidth: '20%',
     },
   ];
-
+  async function handleDelete(id){
+    try {
+      await axios.delete(`http://localhost:3001/api/admin/rent/${id}`);
+      window.location.reload();
+    } catch (error) {
+      console.log('Error deleting property:', error);
+    }
+  }
   return (
     <div className=' relative  w-[100%]'>
       <div className='flex justify-center mt-16 text-3xl font-semibold'>
