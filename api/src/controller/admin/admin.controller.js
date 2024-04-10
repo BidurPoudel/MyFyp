@@ -176,6 +176,11 @@ class AdminController {
                 where: { propertyId: parseInt(propertyId) },
             });
     
+            await prisma.property.update({
+                where: { propertyId: parseInt(propertyId) },
+                data: { isAvailable: true }
+            });
+
             res.json({ message: 'Successfully deleted rented property' }); 
         } catch (error) {
             console.error('Error deleting rented property:', error);

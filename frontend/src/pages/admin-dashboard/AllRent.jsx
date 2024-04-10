@@ -14,9 +14,9 @@ const AllRent = () => {
   const [rents, setRents] = useState([]);
   const [deletePropertyId, setDeletePropertyId] = useState(null);
  
-  async function handleDeleteButton(){
+  async function handleDeleteButton(propertyId){
     setIsVisible(true);
-    console.log('clicked', propertyId)
+    setDeletePropertyId(propertyId)
   }
 
   useEffect(() => {

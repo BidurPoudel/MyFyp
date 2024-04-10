@@ -30,7 +30,7 @@ class RentController{
                 }
             })
             // console.log("property is rented")
-            res.status(200).json(propertyRent);
+            res.json(propertyRent);
 
             const availability = await prisma.property.update({
                 where:{propertyId: parseInt(propertyId)},
