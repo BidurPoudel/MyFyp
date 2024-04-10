@@ -16,31 +16,31 @@ const Home = () => {
   const [loading, setLoading] = useState(true)
   const makePayment = async () => {
     try {
-      const payload ={
+      const payload = {
         "return_url": "http://127.0.0.1:5173/create",
         "website_url": "http://127.0.0.1:5173/properties",
         "amount": 1300,
         "purchase_order_id": "test12",
         "purchase_order_name": "test",
         "customer_info": {
-            "name": "Bidur poudel",
-            "email": "opbi2058@gmail.com",
-            "phone": "9800000123"
+          "name": "Bidur poudel",
+          "email": "opbi2058@gmail.com",
+          "phone": "9800000123"
         },
       };
-  
+
       const response = await axios.post('http://localhost:3001/api/payment/initiate-checkout', payload);
-  
+
       // Extract the payment_url from the response data
       const { payment_url } = response.data;
-  
+
       // Redirect the user to the payment URL
       window.location.href = payment_url;
     } catch (error) {
       console.error('Error initiating payment:', error);
     }
   };
-  
+
 
 
   // const [token, setToken] = useState(null);
@@ -65,32 +65,26 @@ const Home = () => {
           <div className='mx-[7rem] my-[2rem] text-slate-400 text-wrap'>
             <p>We help you to rent the wide and highest quality of property which is suitable for your budget</p>
           </div>
-          <div className="search w-full h-full ">
-          <div className="flex mx-[7rem] mb-5 justify-around">
-            <NavLink to='/properties'>
-            <div className='flex hover:border-1 px-5 py-2 hover:border-black hover:bg-green-100
-            hover:rounded-full -mt-6  hover:outline-1 hover:outline-black'>
-              <p className='text-lg'>Explore more</p>
-              <FontAwesomeIcon icon={faArrowRight}
-                size='1x'
-                style={{ color: 'black', paddingTop: "10px" }}
-                className=' cursor-pointer -mt-[0.1rem] mx-2'
-                onClick={() => setOpen(!open)}
-              />
-              </div>
-            </NavLink>
-          </div>
-            <form action="search" className='flex w-[60%] h-[3.25rem] rounded-full mx-[9rem] relative'>
-              <input type="text" className='w-full h-full border-[0.02rem] border-black px-5 rounded-full outline-[0.1rem] outline-blue-300' />
-              <button className='absolute right-[0.5rem] top-[0.6rem] px-4 py-[0.3rem]
-            bg-gradient-to-r from-green-300 font-semibold to-green-500 text-grey-300 rounded-full
-            hover:bg-gradient-to-r hover:from-grey-500 hover:to-green-700 hover:text-white
-            ' type=''>Search</button>
-            </form>
+          <div className="explore-more w-full h-full ">
+            <div className="flex mx-[7rem] mb-5 justify-around">
+              <NavLink to='/properties'>
+                <div className='flex hover:border-1 px-5 py-2 hover:border-black hover:bg-green-100
+                hover:rounded-full -mt-6  hover:outline-1 hover:outline-black'>
+                  <p className='text-lg'>Explore more</p>
+                  <FontAwesomeIcon icon={faArrowRight}
+                    size='1x'
+                    style={{ color: 'black', paddingTop: "10px" }}
+                    className=' cursor-pointer -mt-[0.1rem] mx-2'
+                    onClick={() => setOpen(!open)}
+                  />
+                </div>
+              </NavLink>
+            </div>
+            
           </div>
 
         </div>
-        
+
         {/* right div */}
         <div className="right flex w-[50%] h-[55vh]">
           <div className="main h-full w-[101%] -mx-20 shadow-lg rounded">
@@ -147,32 +141,32 @@ const Home = () => {
           </div>
         </div>
       </div>
-      
+
       <div>
-      <div className='last-div flex flex-wrap mt-14 justify-between'>
-        <div className="left justify-center mt-10 w-full">
-          
-          <div>
-            <p className='flex justify-center ml-52 mt-2 text-5xl tracking-wider font-semibold'>
-              Be Owner by Listing Your property
-            </p>
-          </div>
-          <div className='flex flex-wrap my-2 mx-[3rem]'>
-          <div className="">
-            <img src={owner} alt="house" className=' rounded-3xl' />
-          </div>
-            <button className='text-white bg-green-500 h-10 w-[30vh] mt-[250px] ml-[20vw] rounded float-left hover:bg-green-700 transition-all delay-75 hover:text-lg'
-            onClick={()=>makePayment()}
-            
-            >BE OWNER</button>
+        <div className='last-div flex flex-wrap mt-14 justify-between'>
+          <div className="left justify-center mt-10 w-full">
+
+            <div>
+              <p className='flex justify-center ml-52 mt-2 text-5xl tracking-wider font-semibold'>
+                Be Owner by Listing Your property
+              </p>
+            </div>
+            <div className='flex flex-wrap my-2 mx-[3rem]'>
+              <div className="">
+                <img src={owner} alt="house" className=' rounded-3xl' />
+              </div>
+              <button className='text-white bg-green-500 h-10 w-[30vh] mt-[250px] ml-[20vw] rounded float-left hover:bg-green-700 transition-all delay-75 hover:text-lg'
+                onClick={() => makePayment()}
+
+              >BE OWNER</button>
+            </div>
           </div>
         </div>
-      </div>
       </div>
 
       {/* footer section */}
       <div>
-      <Footer />
+        <Footer />
       </div>
     </div>
   );

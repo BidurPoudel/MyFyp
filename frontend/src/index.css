@@ -76,7 +76,7 @@ h2:nth-child(2) {
 }
 
 .view-details {
-  @apply bg-red-500 text-white w-full mb-5 px-4 py-2 rounded-md hover:bg-red-600 transition-colors duration-100 hover:border border-black
+  @apply bg-green-500 text-white w-full mb-5 px-4 py-2 rounded-md hover:bg-green-600 transition-colors duration-100 hover:border border-black
 }
 
 .user-sidebar {

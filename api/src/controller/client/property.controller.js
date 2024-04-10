@@ -72,9 +72,7 @@ class PropertyController {
             const testproperty = await prisma.property.findMany();
             console.log(testproperty)
             const getAllProperties = await prisma.property.findMany({
-                where: {
-                    isAvailable: true,
-                },
+
                 include: {
                     owner: {
                         select: {
