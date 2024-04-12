@@ -27,6 +27,7 @@ const SignUp = () => {
       const response = axios.post('http://localhost:3001/api/user/signup', values)
       console.log(values)
       console.log(response.data);
+
       if (response.ok) {
         toast.success('Signup Successful', {
           position: "top-right",

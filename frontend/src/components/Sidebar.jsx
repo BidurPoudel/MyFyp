@@ -16,10 +16,20 @@ const Sidebar = () => {
             p-[10px] px-[90px] py-[20px] duration-200 block
             ${isActive ? "text-white duration-75 bg-blue-500 " : "text-black"} 
             user-active`}
-            style={({ isActive }) => ({
-              transition: "0.23s ease"
+            style={({ isactive }) => ({
+              transition: "0.23 ease"
             })}
           >Property</NavLink>
+          <NavLink to="request"
+            className={({ isActive }) => `
+            p-[10px] px-[90px] py-[20px] duration-200 block
+            ${isActive ? "text-white duration-75 bg-blue-500 " : "text-black"} 
+            user-active`}
+            style={({ isactive }) => ({
+              transition: "0.23 ease"
+            })}
+          >Request</NavLink>
+
           <NavLink to="setting"
             className={({ isActive }) => `
             p-[10px] px-[90px] py-[20px] duration-200 block

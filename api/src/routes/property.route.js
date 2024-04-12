@@ -18,7 +18,9 @@ propertyRoute.get('/allProperties', propertyController.getAllroperty);
 propertyRoute.get('/:propertyId', propertyController.getPropertydetails);
 propertyRoute.put('/:propertyId', loginAuthentication, upload.array('images', 10), propertyController.updateProperty)
 propertyRoute.get('/ownerProperty/user', loginAuthentication, ownerController.getOwnerProperties)
-propertyRoute.get('/rent/:propertyId', loginAuthentication, rentController.rentProperty)
+propertyRoute.get('/rent/:propertyId', loginAuthentication, rentController.rentProperty);
+propertyRoute.get('/rentRequest/user', loginAuthentication, rentController.getAllRentRequests);
+propertyRoute.get('/rent/acceptRequest/:rentId', loginAuthentication, rentController.acceptedRentProperty);
 propertyRoute.delete('/:propertyId', loginAuthentication,propertyController.deletePropertyById);
 
 

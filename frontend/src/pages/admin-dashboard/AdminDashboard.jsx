@@ -1,23 +1,33 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUsers, faBuildingUser, faBuildingCircleCheck, faSackDollar } from '@fortawesome/free-solid-svg-icons';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, ResponsiveContainer, Cell } from 'recharts';
+import { faUsers, faBuildingUser, faBuildingCircleCheck, faSackDollar, faBackward } from '@fortawesome/free-solid-svg-icons';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Pie, PieChart, ResponsiveContainer, Cell } from 'recharts';
 import axois from 'axios';
-import { Pie } from 'react-chartjs-2';
 
+// import { Pie } from 'react-chartjs-2';
+
+const COLORS = ['#0088FE', '#00C49F', '#FF6E6E'];
 const AdminDashboard = () => {
   const [allUsers, setUsers] = useState([]);
   const [allProperties, setAllProperties] = useState([]);
   const [allRents, setAllRents] = useState([]);
   const [allReportedProperties, setAllReportedProperties] = useState([]);
 
+  const totalProperties = allProperties.length;
+  const totalRents = allRents.length;
+  const rentedPercentage = ((totalRents / totalProperties) * 100).toFixed(2);
+
   const propertyTypeData = [
-    { name: 'Rooms', count: 10 },
-    { name: 'Building', count: 6 },
-    { name: 'Flats', count: 8 },
-    { name: 'Shutters', count: 5 },
-    { name: 'Land', count: 12 },
+    { name: 'Total User', count: allUsers.length },
+    { name: 'Total Properties', count: allProperties.length },
+    { name: 'Total Rents', count: allRents.length },
   ]
+
+  const pieData = [
+    { name: 'Total User', value: allUsers.length },
+    { name: 'Total Properties', value: allProperties.length },
+    { name: 'Total Rents', value: allRents.length },
+  ];
 
   const allUserUrl = 'http://localhost:3001/api/admin/allUsers';
   const allPropertiesUrl = 'http://localhost:3001/api/admin/allProperties';
@@ -127,27 +137,40 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
-      <div className="graph-div flex  mt-24 -mx-3 bg-green-100 h-[50vh] ">
-        <div className='pie-chart-graph  mx-4 w-full'>
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart width={400} height={400}>
-              <Pie data={propertyTypeData} dataKey="count" cx="50%" cy="50%" outerRadius={60} fill="#8884d8">
-                {propertyTypeData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={`#${index}0000`} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
+      <div className="graph-div flex relative h-[50vh] ">
+        <div className='pie w-full'>
+          <div>
+            <ResponsiveContainer width="150%" height={650}>
+              <PieChart width={600} height={650}>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={150}
+                  fill="black "
+                  label={({ name, percent }) => `${name} - ${(percent * 100).toFixed(2)}%`}
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`${entry.name}`} fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip/>
+            <Legend />
+
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        <div className='bar-graph w-1/2 px-[2%] py-10 bg-blue-300'>
-          <BarChart width={550} height={300} data={propertyTypeData}>
+        <div className='bar-graph w-1/2 px-[2%] py-24 mx-52 '>
+          <BarChart width={550} height={500} data={propertyTypeData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="count" fill="#f5f5f5" />
+            <Bar dataKey="count" fill="#05c1ff" />
           </BarChart>
         </div>
       </div>

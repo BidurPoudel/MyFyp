@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-;
 import Model from 'react-modal'
 import login from "../assets/login.jfif";
 import { useForm } from "react-hook-form";

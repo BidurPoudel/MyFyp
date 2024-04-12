@@ -31,6 +31,7 @@ import AllRent from './pages/admin-dashboard/AllRent.jsx';
 import AdminDashboard from './pages/admin-dashboard/AdminDashboard.jsx';
 import ReportGeneration from './pages/admin-dashboard/Report.jsx';
 import CheckoutSuccess from './components/CheckoutSuccess.jsx';
+import RequestProperty from './pages/user-dashboard/Requests.jsx';
 Modal.setAppElement('#root');
 const ProtectedRoute = (props) => {
   const { route } = props
@@ -71,6 +72,7 @@ const router = createBrowserRouter([
     children: [
       { path: '', element: <OwnerProperty /> },
       { path: 'payment', element: <Payment /> },
+      { path: 'request', element: <RequestProperty /> },
       { path: 'setting', element: <Setting /> },
       { path: 'update-property/:propertyId', element: <UpdateProperty /> }
 
@@ -88,7 +90,7 @@ const router = createBrowserRouter([
     path: '/admin',
     element: <AdminSidebarLayout/>,
     children:[
-      {path: 'dashboard', element: <AdminDashboard/>},
+      {path: '', element: <AdminDashboard/>},
       {path: 'all-user', element: <AllUser/>},
       {path: 'all-properties', element: <AllProperties/>},
       {path: 'rents', element: <AllRent/>},

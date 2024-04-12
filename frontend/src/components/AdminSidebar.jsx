@@ -11,9 +11,9 @@ const AdminSidebar = () => {
           <img src={logo} alt="Logo" />
         </div>
         <div className="flex flex-col text-lg">
-          <NavLink to="/admin/dashboard"
+          <NavLink to="/admin"
             className={({ isActive }) => `
-            p-[10px] px-[90px] py-[20px] duration-200 block
+            p-[10px] px-[110px] py-[20px] duration-200 block
             ${isActive ? "text-white duration-75 bg-orange-500 " : "text-black"} 
             user-active`}
             style={({ isActive }) => ({

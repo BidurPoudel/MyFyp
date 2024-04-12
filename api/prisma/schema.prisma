@@ -60,6 +60,7 @@ model Rent {
   rentId     Int      @id @default(autoincrement()) @unique
   tenantId   Int
   propertyId Int
+  isAccepted Boolean @default(false)
   rentDate   DateTime @default(now())
   tenant     User     @relation(fields: [tenantId], references: [userId])
   property   Property @relation(fields: [propertyId], references: [propertyId])
@@ -85,7 +86,7 @@ model Report {
 
 model Admin {
   adminId       Int       @id @default(autoincrement())
-  username      String    @unique
+  username      String    
   email         String    @unique
-  password      String
+  password      String    @unique
 }

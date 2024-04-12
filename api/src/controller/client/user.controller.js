@@ -9,14 +9,15 @@ class UserController {
 
     //post route
     signup = async (req, res, next) => {
-
+        console.log(req.body)
         try {
             const body = req.body;
             const validator = vine.compile(signUpValidationSchema);
             const payload = await validator.validate(body);
             if (!payload.username || !payload.email || !payload.password || !payload.phoneNumber) {
-                throw new Error('Provide all information')
+                res.json({error:'Provide all information'})
             }
+
             payload.password = await bcrypt.hash(payload.password, 10)
             const user = await prisma.user.create({
                 data: payload

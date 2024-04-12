@@ -150,7 +150,6 @@ class PropertyController {
             const getAllProperties = await prisma.property.findUnique({
                 where: {
                     propertyId: parseInt(propertyId),
-                    isAvailable: true,
                 },
                 include: {
                     owner: {
@@ -174,7 +173,7 @@ class PropertyController {
         }
     }
 
-
+    
     getPropertyTypeById = async (req, res, next) => {
         const { typeId } = req.params;
         try {
@@ -300,7 +299,7 @@ class PropertyController {
             await prisma.rent.deleteMany({
                 where: {
                     propertyId: parseInt(propertyId)
-                }
+                },
             });
             await prisma.payment.deleteMany({
                 where: {
@@ -332,7 +331,7 @@ class PropertyController {
             if (!userId) console.log('not logged in!!');
             const properties = await prisma.property.findUniqueOrThrow({
                 where: {
-                    ownerId: userId, // Filter properties by ownerId (logged-in user's ID)
+                    ownerId: userId, 
                 },
                 include: {
                     owner: {

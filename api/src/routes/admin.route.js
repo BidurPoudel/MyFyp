@@ -1,11 +1,14 @@
 import { Router } from "express";
 import { adminRoleController } from "../controller/admin/addProperty.controller.js";
 import { adminController } from "../controller/admin/admin.controller.js";
+import { adminUserController } from "../controller/admin/adminUser.controller.js";
 
 
 
 
 const adminRoute = Router();
+adminRoute.post('/signup', adminUserController.adminSignup);
+adminRoute.post('/login', adminUserController.adminLogin); 
 adminRoute.post('/createPropertyType', adminRoleController.createPropertyType);
 adminRoute.post('/addPropertyType', adminRoleController.addNewPropertyType)
 adminRoute.put('/updatePropertyType/:propertyTypeId', adminRoleController.updatePropertyTypeById);
