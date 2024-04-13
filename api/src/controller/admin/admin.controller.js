@@ -136,6 +136,9 @@ class AdminController {
 
 
             const rentedProperties = await prisma.rent.findMany({
+                where:{
+                    isAccepted: true
+                },
                 include:{
                     property: {
                         include:{

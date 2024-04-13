@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWarning,faTimes } from '@fortawesome/free-solid-svg-icons'
 import Model from 'react-modal';
-
 import PropertyCard from '../components/PropertyCard.jsx'
 import { useParams } from 'react-router'
 import { useNavigate } from "react-router-dom";
@@ -39,7 +38,7 @@ const PropertyDetails = () => {
             const response = await axios.get(rentUrl, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `${token}`
+                    Authorization: `${token}`
                 },
                 withCredentials: true
             });
@@ -47,7 +46,7 @@ const PropertyDetails = () => {
                
                 navigate('/properties')
             }
-            toast.success('Property Rented', {
+            toast.success('Requested for property', {
                 position: "top-right",
                 autoClose: 6000,
                 hideProgressBar: false,
@@ -63,13 +62,8 @@ const PropertyDetails = () => {
             }
         } catch (error) {
             console.log(error);
-            if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.authentication) {
-                toast.error(error.response.data.errors.authentication); // Display error message to user
-              } else {
-                console.log(error); // Log other errors to console
-              }
-              if(response.status === 400){
-                toast.error(response.data.error); // Display the error message sent from the server
+            if(error.response.data.error) {
+                toast.error(error.response.data.error)
             }
         }
     }
@@ -105,15 +99,15 @@ const PropertyDetails = () => {
             }
             setIsVisible(false)
         } catch (error) {
-            console.log(error);
             if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.authentication) {
                 toast.error(error.response.data.errors.authentication); // Display error message to user
               } else {
                 console.log(error); // Log other errors to console
               }
-              if(response.status === 400){
-                toast.error(response.data.error); // Display the error message sent from the server
+              if(error.response && error.response.status === 400){
+                toast.error(error.response.data.error); // Display the error message sent from the server
             }
+    
         }
     }
     async function ReportButton(){

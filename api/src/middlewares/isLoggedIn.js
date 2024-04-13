@@ -9,7 +9,6 @@ const loginAuthentication = async (req, res, next) => {
         console.log(verifyToken);
         if (!verifyToken) {
             res.send('login first!!');
-            // throw new Error('Not logged in!!')
         }
 
         const decoded = jwt.verify(verifyToken, process.env.JWT_SECRET)

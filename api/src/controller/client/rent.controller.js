@@ -9,10 +9,11 @@ class RentController {
                 where: {
                     propertyId: parseInt(propertyId)
                 }
+                    
             });
 
             if (existedProperty.ownerId === tenantId) {
-                res.status(400).json({ error: "Onwer can't rent his/her own property" })
+                return res.status(400).json({ error: "Owner can't rent their own property" });
             }
 
             const isPropertyRented = await prisma.rent.findFirst({
@@ -24,6 +25,18 @@ class RentController {
 
             if (isPropertyRented) {
                 return res.status(400).json({ error: "Property is already rented" });
+            }
+
+            const existingRequest = await prisma.rent.findFirst({
+                where: {
+                    propertyId: parseInt(propertyId),
+                    tenantId: parseInt(tenantId),
+                    isAccepted: false
+                }
+            });
+    
+            if (existingRequest) {
+                return res.status(400).json({ error: "You already requested to rent this property" });
             }
 
 
@@ -127,6 +140,34 @@ class RentController {
             });
 
             res.json(acceptedRentRequest);
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
+    rejectRentProperty = async (req, res) => {
+        const { rentId } = req.params
+        try {
+            const rentRequest = await prisma.rent.findUnique({
+                where: {
+                    rentId: parseInt(rentId)
+                },
+                include: {
+                    property: true, 
+                    tenant: true
+                }
+            });
+
+            if (!rentRequest) {
+                return res.status(404).json({ error: "Rent request not found" });
+            }
+            await prisma.rent.delete({
+                where: {
+                    rentId: parseInt(rentId)
+                }
+            });
+    
+            res.json({message: "You rejected he request"})
         } catch (error) {
             res.status(500).json({ error: 'Internal server error' });
         }
