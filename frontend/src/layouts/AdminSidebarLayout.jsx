@@ -8,6 +8,7 @@ const AdminSidebarLayout = () => {
       <div className="flex">
       <AdminSidebar/>
       <Outlet/>
+      
       </div>
     </>
   )

@@ -13,11 +13,29 @@ const ReportGeneration = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [properties, setReportProperties] = useState([]);
   const [deletePropertyId, setDeletePropertyId] = useState(null);
+  const [search, setSearch] = useState('');
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+
+
+  const filteredRents = properties.filter((rent) => {
+    return (
+      rent.property.owner.username.toLowerCase().includes(search.toLowerCase()) ||
+      rent.property.propertyType.propertyName.toLowerCase().includes(search.toLowerCase()) ||
+      rent.reporter.username.toLowerCase().includes(search.toLowerCase()) ||
+      rent.property.address.toLowerCase().includes(search.toLowerCase())
+    );
+  });
   
+
+
   async function handleDeleteButton(propertyId){
     setIsVisible(true)
     setDeletePropertyId(propertyId)
   }
+
 
   
   useEffect(() => {
@@ -46,72 +64,65 @@ const ReportGeneration = () => {
   const columns = [
     {
       name: 'S.No',
+      minWidth:"70px",
       selector: (row, index) => index + 1,
-      width: '68px',
+
       style: {
-        fontSize: '18px',
+        fontSize: '16px',
       },
     },
     
     {
       name: 'Owner Name',
       selector: (row) => row.property.owner.username,
-      minWidth: '20px',
       style: {
-        fontSize: '18px',
+        fontSize: '16px',
       },
     },
     {
-      name: 'Property Type',
+      name: 'Property',
       selector: (row) => row.property.propertyType.propertyName,
-      minWidth: '20px',
       style: {
-        fontSize: '18px',
-      },
-    },
-    {
-      name: 'Property Address',
-      selector: (row) => row.property.address,
-      minWidth:'px',
-      style: {
-        fontSize: '18px',
+        fontSize: '16px',
       },
     },
     {
       name: 'Reporter Name',
       selector: (row) => row.reporter.username,
+  
       style: {
-        fontSize: '18px',
+        fontSize: '16px',
       },
     },
     {
-      name: 'Reporter phone Number',
+      name: 'Phone Number',
       selector: (row) => row.reporter.phoneNumber,
-      minWidth:'250px',
+      
       style: {
-        fontSize: '18px',
+        fontSize: '16px',
       },
     },
     {
-      name: 'Reporter Email address',
+      name: 'Email address',
       selector: (row) => row.reporter.email,
-      minWidth:'250px',
+      
       style: {
-        fontSize: '18px',
+        fontSize: '16px',
       },
     },
     {
       name: 'Reported At',
       selector: (row) => row.reportedAt,
-      minWidth:'250px',
+     
       style: {
-        fontSize: '18px',
+        fontSize: '16px',
       },
     },
     {
       name: 'Actions',
+      
       cell: (row) => (
-        <div className='flex space-x-2'>
+        <div>
           <button
             className='border border-black w-[6rem] text-lg bg-red-500 text-white hover:bg-red-600 rounded-md'
             type='button'
@@ -132,20 +143,20 @@ const ReportGeneration = () => {
       </div>
       <div>
       <div className='flex relative mt-10 w-full bg-red-200'>
-        <div className='absolute flex justify-center w-[50%] left-[25rem] mt-3 -top-11 text-xl'>Total users</div>
+        <div className='absolute flex justify-center w-[50%] left-[25rem] mt-3 -top-11 text-xl'>Total reports: {properties.length}</div>
       </div>
-        <div className='w-[100%] -ml-20 absolute top-48 left-20'>
+        <div className='w-[100%] -ml-[5.4rem] absolute top-48 left-20'>
           <DataTable
             responsive={true}
             columns={columns}
-            data={properties} // Use the 'data' array here
+            data={filteredRents} // Use the 'data' array here
             pagination
             subHeader
             subHeaderComponent={
               <input
                 type='text'
                 placeholder='search property'
-                className='px-4 py-[0.3rem]  my-5 border-black rounded-full bg-gradient-to-r text-black hover:bg-gradient-to-r hover:from-grey-500 hover:to-green-700 hover:text-white'
+                className='px-4 py-[0.3rem]  my-5 border border-1 border-black rounded-full bg-gradient-to-r text-black'
               />
             }
             customStyles={{
@@ -191,7 +202,7 @@ const ReportGeneration = () => {
             top: '50px', // Initial top position
             left: '50%', // Center horizontally
             transform: 'translateX(-50%)', // Center horizontally
-            height: '35%',
+            height: '45%',
             width: '50%',
             borderRadius: '25px',
             animation: 'fade-in 5s forwards', // Fade out animation

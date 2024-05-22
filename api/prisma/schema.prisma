@@ -68,9 +68,8 @@ model Rent {
 
 model Payment {
   paymentId     Int      @id @default(autoincrement()) @unique
-  paymentAmount Float
   ownerId       Int
-  propertyId    Int
+  paymentAmount Float
   paymentDate   DateTime @default(now())
   owner         User     @relation(fields: [ownerId], references: [userId])
 }

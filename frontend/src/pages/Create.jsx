@@ -7,6 +7,7 @@ import { useNavigate } from "react-router";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import Model from 'react-modal';
+import Footer from "../layouts/Footer/Footer";
 
 const Create = () => {
 
@@ -138,6 +139,35 @@ const Create = () => {
     }
   };
 
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    const amount = params.amount;
+    if (params.pidx && params.transaction_id && params.amount) {
+      const pidx = params.pidx;
+      const transaction_id = params.transaction_id;
+      const amount = params.amount;
+      console.log(pidx, transaction_id, amount);
+    }
+    const savePayment = async ()=>{
+      console.log(`Amount is ${amount}`)
+      const token = localStorage.getItem('token')
+      try {
+        const response = await axios.post('http://localhost:3001/api/payment/save-payment', { amount: amount },
+      {
+        headers:{
+          Authorization: token
+        }
+      }
+      )
+        console.log(response)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    savePayment()
+  }, []);
+
 
   return (
     <div>
@@ -147,12 +177,12 @@ const Create = () => {
         </p>
       </div>
       <div className="addLists flex mt-[6vh] justify-center mr-16">
-        <div className="property-listing flex px-2 shadow-2xl drop-shadow-3xl bg-slate-200 h-auto w-[60%] -mt-1  ml-[60px] border-2  float-left pt-5 pl-5 pr-5">
+        <div className="property-listing flex px-2 shadow-2xl drop-shadow-3xl bg-slate-200 h-auto w-[75%] -mt-6 ml-[60px] border-2  float-left pt-5 pl-5 pr-5">
           <div className="first pl-10 mt-1">
             <form action="/create" method="POST" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex">
                 <div className="left">
-                  <label htmlFor="Location">
+                  <label className="input-label" htmlFor="Location">
                     Location <br />
                   </label>
                   <input
@@ -164,7 +194,7 @@ const Create = () => {
                     <p className="text-red-600 font-xs font-thin -mt-3 -mb-2 ">Cannot be empty</p>
                   )}
                   <br />
-                  <label htmlFor="Price">
+                  <label className="input-label" htmlFor="Price">
                     Price
                     <br />
                   </label>
@@ -183,7 +213,7 @@ const Create = () => {
                     <p className="text-red-600 font-xs font-thin -mt-3 -mb-2 ">Cannot be empty</p>
                   )}
                   <br />
-                  <label htmlFor="area">
+                  <label className="input-label" htmlFor="area">
                     Area <br />
                   </label>
                   <input
@@ -193,7 +223,7 @@ const Create = () => {
                     className="input-listings"
                   />
                   <br />
-                  <label htmlFor="flatNumber">
+                  <label className="input-label" htmlFor="flatNumber">
                     Numbers of flats
                     <br />
                   </label>
@@ -211,7 +241,7 @@ const Create = () => {
                     }}
                   />
                   <br />
-                  <label htmlFor="roomNumber">
+                  <label className="input-label" htmlFor="roomNumber">
                     Numbers of rooms
                     <br />
                   </label>
@@ -228,7 +258,7 @@ const Create = () => {
                     }}
                   />
                   <br />
-                  <label htmlFor="shutterNumber">
+                  <label className="input-label" htmlFor="shutterNumber">
                     Numbers of shutters
                     <br />
                   </label>
@@ -257,40 +287,40 @@ const Create = () => {
                       {...register("propertyName", { required: true })
                       }
                     />
-                    <label htmlFor="Land">Land</label>
+                    <label className="input-label" htmlFor="Land">Land</label>
                     <input
                       type="radio"
                       id="Rooms"
                       value='Rooms'
                       {...register("propertyName", { required: true })}
                     />
-                    <label htmlFor="Rooms">Rooms</label>
+                    <label className="input-label" htmlFor="Rooms">Rooms</label>
                     <input
                       type="radio"
                       id="Flats"
                       value="Flats"
                       {...register("propertyName", { required: true })}
                     />
-                    <label htmlFor="Flats">Flats</label>
+                    <label className="input-label" htmlFor="Flats">Flats</label>
                     <input
                       type="radio"
                       id="Shutters"
                       value='Shutters'
                       {...register("propertyName", { required: true })}
                     />
-                    <label htmlFor="Shutters">Shutters</label>
+                    <label className="input-label" htmlFor="Shutters">Shutters</label>
                     <input
                       type="radio"
                       id="Building"
                       value='Building'
                       {...register("propertyName", { required: true })}
                     />
-                    <label htmlFor="Building">Building</label>
+                    <label className="input-label" htmlFor="Building">Building</label>
                   </div>
-                  <label htmlFor="description">Description</label>
+                  <label className="input-label" htmlFor="description">Description</label>
                   <br />
                   <textarea
-                    className="form-control mb-6 w-full border-[ border-black"
+                    className="form-control mb-6 w-full border border-black placeholder:text-base placeholder:px-2"
                     id="description"
                     {...register("description", { required: true })}
                     cols="50"
@@ -301,15 +331,15 @@ const Create = () => {
                   )}
                   <br />
                   <div className="uploadingImage flex">
-                    <label htmlFor="image">Image</label>
+                    <label htmlFor="image" className="-mt-[0.05rem] mr-1">Image</label>
                     <br />
                     <input
                       id="File"
                       {...register("images", { required: true })}
-                      accept=".webp,.jpeg,.png"
-                      className="block w-[13vh]"
+                      accept=".webp,.jpeg, .jpg, .png,.jfif"
                       type="file"
                       multiple="multiple"
+                      
                       onChange={handleFileChange}
                     />{errors.imagenpm && (
                       <p className="text-red-600 font-xs font-thin -mt-3 -mb-2 ">Cannot be empty</p>
@@ -356,7 +386,7 @@ const Create = () => {
           }
         }}
       >
-        <div className="image-div flex sticky relative">
+        <div className="image-div flex relative">
           <button onClick={() => setIsVisible(false)} className='text-3xl px-3 w-10 absolute right-5 top-1'>
             <FontAwesomeIcon icon={faXmark}
               style={{ color: 'black', paddingTop: "10px" }}
@@ -380,7 +410,9 @@ const Create = () => {
           </button>
         </div>
       </Model>
-
+      <div className='w-full mt-5 bg-red-100 '>
+      <Footer />
+      </div>
     </div>
   );
 };

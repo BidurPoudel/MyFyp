@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Model from 'react-modal'
-import login from "../assets/login.jfif";
+import login from "../assets/newlogin.png";
 import { useForm } from "react-hook-form";
 import axios from 'axios';
 import { useNavigate, NavLink } from 'react-router-dom';
@@ -24,13 +24,6 @@ const Login = () => {
 
 
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      toast.error('login properly!!')
-      console.log('User not logged in');
-    }
-  }, []);
 
   async function onSubmit(value) {
     try {
@@ -48,9 +41,9 @@ const Login = () => {
         navigate('/')
       }
       console.log(jwtDecode(token))
-      toast.success('logged in', {
+      toast.success('You are logged in !!', {
         position: "top-right",
-        autoClose: 6000,
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: false,
         pauseOnHover: false,
@@ -121,7 +114,9 @@ const Login = () => {
                     <p className="text-red-600 font-xs font-thin -mt-3 -mb-2">Password is required</p>
                   )}
                   <br />
-
+                  <div className='flex justify-end text-blue-500'>
+                  <NavLink to='/find-email'>Forgot Password?</NavLink>
+                  </div>
                   <button className='text-white bg-green-500 w-[24vw] mt-4 mb-10 py-2 rounded-full'>
                     login
                   </button>

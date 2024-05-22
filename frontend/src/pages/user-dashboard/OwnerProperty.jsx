@@ -6,13 +6,23 @@ import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import Footer from '../../layouts/Footer/Footer';
 
 const OwnerProperty = () => {
   const { propertyId } = useParams();
   const [isVisible, setIsVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [deletePropertyId,  setDeletePropertyId] = useState(null);
-
+  const [search , setSearch] = useState('')
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+  const filteredProperties = properties.filter((property) => {
+    return (
+      property.propertyType.propertyName.toLowerCase().includes(search.toLowerCase()) ||
+      property.address.toLowerCase().includes(search.toLowerCase())
+    );
+  });
   const columns = [
     {
       name: 'S.No',
@@ -33,7 +43,7 @@ const OwnerProperty = () => {
     {
       name: 'Address',
       selector: (row) => row.address,
-      minWidth: '250px',
+      minWidth: '150px',
       style: {
         fontSize: '18px',
       },
@@ -92,7 +102,7 @@ const OwnerProperty = () => {
           </button>
         </div>
       ),
-      minWidth: '20%',
+      minWidth: '22%',
     },
   ];
 
@@ -140,6 +150,7 @@ const OwnerProperty = () => {
   const totalPropertiesPosted = properties.filter((property) => property.ownerId === ownerId).length;
 
   return (
+    <>
     <div>
       <div>
         <p className='flex justify-center p-10 text-5xl font-semibold'>Your properties</p>
@@ -149,14 +160,15 @@ const OwnerProperty = () => {
         <DataTable
           responsive={true}
           columns={columns}
-          data={properties}
+          data={filteredProperties}
           pagination
           subHeader
           subHeaderComponent={
             <input
+              onChange={handleSearchChange}
               type='text'
               placeholder='search property'
-              className='px-4 py-[0.3rem] my-10 border-black rounded-full bg-gradient-to-r text-grey-300 hover:bg-gradient-to-r hover:from-grey-500 hover:to-green-700 hover:text-white'
+              className='px-4 py-[0.3rem] my-10 border-black rounded-full border'
             />
           }
           customStyles={{
@@ -201,8 +213,8 @@ const OwnerProperty = () => {
             top: '50px',
             left: '50%',
             transform: 'translateX(-50%)',
-            height: '35%',
-            width: '40%',
+            height: '50%',
+            width: '50%',
             borderRadius: '25px',
             animation: 'fade-in 5s forwards',
             transition: 'top 1s ease-out',
@@ -218,7 +230,7 @@ const OwnerProperty = () => {
           </div>
           <p className='text-2xl font-bold my-10 mx-44 w-1/2 h-1/2 text-red-500'>This action cannot be undone!!!</p>
           <div className='flex relative justify-between w-1/7 my-[4rem] ml-[45px] '>
-            <div className=' absolute right-6 top-6'>
+            <div className=' absolute right-6 top-12'>
               <button className='action-btn' onClick={() => handleDelete(deletePropertyId)}>Delete</button>
               <button className='mx-1 px-5 py-1 font-bold rounded-xl border border-black bg-gray-300 ' onClick={() => setIsVisible(false)}>Close</button>
             </div>
@@ -226,6 +238,7 @@ const OwnerProperty = () => {
         </div>
       </Model>
     </div>
+    </>
   );
 };
 

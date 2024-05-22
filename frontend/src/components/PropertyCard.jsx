@@ -19,7 +19,7 @@ const PropertyCard = (props) => {
                             <h2 className='property-type '>Property Type: <span className='ml-1'>{props.propertyType}</span></h2>
                             <div className="small-details">
                                 <h2>Address: <span>{props.address}</span></h2>
-                                <h2>Area:<span>{props.area}</span></h2>
+                                <h2>Area: <span>{props.area}</span></h2>
                             </div>
                         </div>
                         <div className="mt-4">

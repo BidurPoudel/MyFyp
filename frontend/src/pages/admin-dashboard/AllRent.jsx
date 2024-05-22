@@ -13,7 +13,22 @@ const AllRent = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [rents, setRents] = useState([]);
   const [deletePropertyId, setDeletePropertyId] = useState(null);
- 
+  const [search, setSearch] = useState('');
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+
+
+  const filteredRents = rents.filter((rent) => {
+    return (
+      rent.property.owner.username.toLowerCase().includes(search.toLowerCase()) ||
+      rent.property.propertyType.propertyName.toLowerCase().includes(search.toLowerCase()) ||
+      rent.tenant.username.toLowerCase().includes(search.toLowerCase()) ||
+      rent.property.address.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+
   async function handleDeleteButton(propertyId){
     setIsVisible(true);
     setDeletePropertyId(propertyId)
@@ -51,7 +66,7 @@ const AllRent = () => {
     {
       name: 'Owner Name',
       selector: (row) => row.property.owner.username,
-      minWidth: '100px',
+      minWidth: '180px',
       style: {
         fontSize: '18px',
       },
@@ -59,7 +74,7 @@ const AllRent = () => {
     {
       name: 'Property Name',
       selector: (row) => row.property.propertyType.propertyName,
-      minWidth: '250px',
+      minWidth: '150px',
       style: {
         fontSize: '18px',
       },
@@ -67,7 +82,7 @@ const AllRent = () => {
     {
       name: 'Tenant Name',
       selector: (row) => row.tenant.username,
-      minWidth: '250px',
+      minWidth: '150px',
       style: {
         fontSize: '18px',
       },
@@ -75,6 +90,7 @@ const AllRent = () => {
     {
       name: 'Property Address',
       selector: (row) => row.property.address,
+      minWidth: '150px',
       style: {
         fontSize: '18px',
       },
@@ -82,7 +98,7 @@ const AllRent = () => {
     {
       name: 'Actions',
       cell: (row) => (
-        <div className='flex space-x-2'>
+        <div className='flex space-x-1'>
           <button
             className='border border-black w-[6rem] text-lg bg-red-500 text-white hover:bg-red-600 rounded-md'
             type='button'
@@ -105,25 +121,25 @@ const AllRent = () => {
   }
   return (
     <div className=' relative  w-[100%]'>
-      <div className='flex justify-center mt-16 text-3xl font-semibold'>
-        Data of All Users
+      <div className='flex justify-center mt-16 mr-44 text-3xl font-semibold'>
+        Data of Rented Properties
       </div>
       <div>
       <div className='flex relative mt-10 w-full bg-red-200'>
-        <div className='absolute flex justify-center w-[50%] left-[25rem] mt-3 -top-11 text-xl'>Total users</div>
+        <div className='absolute flex justify-center w-[50%] left-[15rem] mt-3 -top-11 text-xl'>Total Rents:{rents.length}</div>
       </div>
-        <div className='w-[75%] mx-[4rem] absolute top-48 left-20'>
+        <div className='w-[75%] absolute top-48 left-20'>
           <DataTable
             responsive={true}
             columns={columns}
-            data={rents} // Use the 'data' array here
+            data={filteredRents} // Use the 'data' array here
             pagination
             subHeader
             subHeaderComponent={
               <input
                 type='text'
                 placeholder='search property'
-                className='px-4 py-[0.3rem] my-5 border-black rounded-full bg-gradient-to-r text-black hover:bg-gradient-to-r hover:from-grey-500 hover:to-green-700 hover:text-white'
+                className='px-4 py-[0.3rem] text-lg my-5 border border-1 border-black rounded-full bg-gradient-to-r text-black'
               />
             }
             customStyles={{
@@ -169,8 +185,8 @@ const AllRent = () => {
             top: '50px', // Initial top position
             left: '50%', // Center horizontally
             transform: 'translateX(-50%)', // Center horizontally
-            height: '35%',
-            width: '40%',
+            height: '45%',
+            width: '55%',
             borderRadius: '25px',
             animation: 'fade-in 5s forwards', // Fade out animation
             transition: 'top 1s ease-out', // Apply transition effect to top position

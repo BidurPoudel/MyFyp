@@ -12,4 +12,4 @@ mainRoute.use('/properties', propertyRoute);
 mainRoute.use('/admin', adminRoute);
 mainRoute.use('/payment', paymentRoute);
 
-export default mainRoute
+export default mainRoute;

@@ -2,9 +2,6 @@ import express from 'express'
 import cors from 'cors'
 import mainRoute from './src/main.route.js';
 import cookieParser from 'cookie-parser';
-
-
-
 const app = express();
 const port = 3001;
 
@@ -19,8 +16,6 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
-
-
 
 //entry routes
 app.use('/api', mainRoute)

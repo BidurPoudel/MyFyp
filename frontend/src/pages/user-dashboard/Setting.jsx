@@ -9,15 +9,14 @@ const Setting = () => {
   const token = localStorage.getItem('token')
   const navigate = useNavigate();
 
-  const handleLogout=()=>{
-    console.log('clicked')
+  const handleLogout = async()=>{
     const token = localStorage.removeItem('token');
-    if(!token){
-
-      navigate('/login')
-    }
+    navigate('/login')
   }
 
+  const handleChangePassword=()=>{
+    navigate('/owner/change-password')
+  }
 
   useEffect(()=>{
     const user = async () => {
@@ -41,9 +40,10 @@ const Setting = () => {
 
   return (
     <div>
-      <div className='flex justify-center w-[100vw] h-full bg'>
-        <div className=' w-1/2 relative mr-[25rem] bg-red-100'>
-          <div className="container flex justify-center absolute top-44 ">
+      <div className='flex justify-center w-[80vw] h-full'>
+        <div className=' w-1/2 relative ml-[-10rem] my-5 shadow-md  shadow-black bg-Slate-200'>
+            <div className='flex justify-center mt-20 text-5xl font-bold'>Your Details</div><br />
+          <div className="container flex justify-center absolute top-44  ">
             <div className="img flex justify-center">
             <FontAwesomeIcon icon={faCircleUser}
                   size='5x'
@@ -58,12 +58,17 @@ const Setting = () => {
               <p className='text-lg my-5 font-semibold'>User Name: <span className='mx-2'>{userData.username}</span></p>
               <p className='text-lg my-5 font-semibold'>Email address: <span className='mx-2'>{userData.email}</span></p>
               <p className='text-lg my-5 font-semibold'>Phone Number: <span className='mx-2'>{userData.phoneNumber}</span></p>
+              <p className='text-lg my-5 font-semibold'>Change password: <button 
+              className='bg-green-500 rounded p-2 ml-2 text-white font-normal hover:bg-green-700 '
+              onClick={()=>handleChangePassword()}
+              >Click here</button></p>
+              
             </div>
             <div>
             </div>
           </div>
-              <button className='text-white bg-green-500 h-10 w-[30vh] my-[5vh] ml-[20vw] rounded float-left hover:bg-green-700 transition-all delay-75 hover:text-lg absolute bottom-72 text-md '
-              oncClick={()=>handleLogout()}
+              <button className='text-white bg-green-500 h-10 w-[30vh] -my-[25vh] ml-[13vw] rounded hover:bg-green-700 transition-all delay-75 hover:text-lg absolute bottom-72 text-md '
+              onClick={()=>handleLogout()}
               >LOGOUT</button>
         </div>
       </div>

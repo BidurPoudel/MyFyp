@@ -257,7 +257,12 @@ class PropertyController {
                     isAvailable: true
                 }
             });
-
+            await prisma.propertyImage.deleteMany({
+                where: {
+                    propertyId: parseInt(propertyId)
+                }
+            });
+            
             if (files && Array.isArray(files)) {
                 const savedFiles = await Promise.all(
                     files.map(async (file) => {

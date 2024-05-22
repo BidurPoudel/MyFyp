@@ -12,9 +12,14 @@ import { faUsers, faBuildingUser, faBuildingCircleCheck, faArrowRight } from '@f
 import Footer from '../layouts/Footer/Footer';
 
 const Home = () => {
+  const [allUsers, setUsers] = useState([]);
+  const [allProperties, setAllProperties] = useState([]);
+  const [allRents, setAllRents] = useState([]);
+  // const userToken = localStorage.getItem('token')
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true)
   const makePayment = async () => {
+    console.log('clicked')
     try {
       const payload = {
         "return_url": "http://127.0.0.1:5173/create",
@@ -28,13 +33,8 @@ const Home = () => {
           "phone": "9800000123"
         },
       };
-
       const response = await axios.post('http://localhost:3001/api/payment/initiate-checkout', payload);
-
-      // Extract the payment_url from the response data
       const { payment_url } = response.data;
-
-      // Redirect the user to the payment URL
       window.location.href = payment_url;
     } catch (error) {
       console.error('Error initiating payment:', error);
@@ -47,6 +47,56 @@ const Home = () => {
   const totalUser = 20;
   const totalProperty = 10;
   const totalRent = 6;
+
+  const allUserUrl = 'http://localhost:3001/api/admin/allUsers';
+  const allPropertiesUrl = 'http://localhost:3001/api/admin/allProperties';
+  const allRentUrl = 'http://localhost:3001/api/admin/allRents';
+  const allReportedPropertiesUrl = 'http://localhost:3001/api/admin/allReportedProperties';
+
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(allUserUrl);
+        console.log(response.data)
+        setUsers(response.data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
+    const fetchProperties = async () => {
+      try {
+        const response = await axios.get(allPropertiesUrl);
+        console.log(response.data)
+        setAllProperties(response.data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
+    const fetchRentedProperties = async () => {
+      try {
+        const response = await axios.get(allRentUrl);
+        console.log(response.data)
+        setAllRents(response.data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
+    const fetchReportedProperties = async () => {
+      try {
+        const response = await axios.get(allReportedPropertiesUrl);
+        console.log(response.data)
+        setAllReportedProperties(response.data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
+    fetchUsers();
+    fetchProperties();
+    fetchRentedProperties();
+    fetchReportedProperties();
+
+  }, [])
 
   return (
     <div>
@@ -80,7 +130,6 @@ const Home = () => {
                 </div>
               </NavLink>
             </div>
-            
           </div>
 
         </div>
@@ -113,7 +162,7 @@ const Home = () => {
               />
             </div>
             <div className='text-xl ml-10'>Total User</div>
-            <div className='text-xl ml-16'>{totalUser}</div>
+            <div className='text-xl ml-16'>{allUsers.length}</div>
           </div>
           <div className="property-data h-full ">
             <div className='my-5 mx-[35%]'>
@@ -125,7 +174,7 @@ const Home = () => {
               />
             </div>
             <div className='text-xl '>total Properties</div>
-            <div className='text-xl mx-12 '>{totalProperty}</div>
+            <div className='text-xl mx-12 '>{allProperties.length}</div>
           </div>
           <div className="property-data h-full  ">
             <div className='my-5 mx-[60px]'>
@@ -137,7 +186,7 @@ const Home = () => {
               />
             </div>
             <div className='text-xl'>Total property Rent</div>
-            <div className='text-xl ml-[4.5rem]'>{totalRent}</div>
+            <div className='text-xl ml-[4.5rem]'>{allRents.length}</div>
           </div>
         </div>
       </div>
@@ -163,10 +212,11 @@ const Home = () => {
           </div>
         </div>
       </div>
-
+        <div>
+        </div>
       {/* footer section */}
-      <div>
-        <Footer />
+      <div className='w-full bg-red-100 '>
+      <Footer/>
       </div>
     </div>
   );

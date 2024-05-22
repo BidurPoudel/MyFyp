@@ -1,47 +1,78 @@
 import prisma from "../../../prisma/index.js";
 import axios from 'axios';
 import dotenv from 'dotenv';
-dotenv.config();  
+dotenv.config();
 
 class PaymentController {
   paymentInitiate = async (req, res) => {
     const payload = req.body;
-    // console.log(payload)
-    
+    const { amount } = req.body;
+
+
     try {
       const response = await axios.post(
-      'https://a.khalti.com/api/v2/epayment/initiate/', payload, {
+        'https://a.khalti.com/api/v2/epayment/initiate/', payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `key ${process.env.KHALTI_SECRET_KEY}`
         }
       });
-      
+
       // const {payment_url} = response.data
       // console.log(payment_url)
       res.json(response.data);
+
+      // const payment = await prisma.payment.create({
+      //   data: {
+      //     paymentAmount: parseFloat(amount)
+      //   },
+      // });
+
       // console.log(`this is payment url: ${payment_url}`)
     } catch (error) {
-      console.error(error); 
+      console.error(error);
     }
   }
-//   confirmTransaction = async (publicKey, token, confirmationCode, transactionPin)=> {
-//     try {
-        
-//         const confirmResponse = await axios.post('https://khalti.com/api/v2/payment/confirm/', {
-//             public_key: publicKey,
-//             token: token,
-//             confirmation_code: confirmationCode,
-//             transaction_pin: transactionPin
-//         });
+  savePayment = async (req, res, next) => {
+    const { amount } = req.body;
+    const total_amount = parseFloat(amount)
+    const userId = req.user.userId;
+    try {
+      const response = await prisma.payment.create({
+        data: {
+          paymentAmount: total_amount,
+          ownerId: userId
+        }
+      })
+      console.log(response)
+    } catch (error) {
+      next(error)
+    }
 
-//         console.log('Confirm Transaction Response:', confirmResponse.data);
-//         return confirmResponse.data; // Return the confirmation response
-//     } catch (error) {
-//         console.error('Error confirming transaction:', error.response.data);
-//         throw error; // Propagate the error to be caught by the calling function
-//     }
-// }
+  }
+
+  getAllPayment = async (req, res) => {
+    try {
+        const allPayments = await prisma.payment.findMany({
+            include: {
+                owner: {
+                    select: {
+                        username: true,
+                        email: true,
+                        phoneNumber: true
+                    }
+                }
+            }
+        });
+        console.log(allPayments);
+        res.status(200).json(allPayments); // Send the payments as JSON response
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' }); // Send error response if any
+    }
+};
+
+
 }
 
 export const paymentController = new PaymentController();

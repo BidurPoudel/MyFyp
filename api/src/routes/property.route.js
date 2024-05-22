@@ -21,6 +21,7 @@ propertyRoute.get('/ownerProperty/user', loginAuthentication, ownerController.ge
 propertyRoute.get('/rent/:propertyId', loginAuthentication, rentController.rentProperty);
 propertyRoute.get('/rentRequest/user', loginAuthentication, rentController.getAllRentRequests);
 propertyRoute.get('/rent/acceptRequest/:rentId', loginAuthentication, rentController.acceptedRentProperty);
+propertyRoute.get('/notification/user', loginAuthentication, rentController.sendNotification)
 propertyRoute.delete('/rent/rejectRequest/:rentId', loginAuthentication, rentController.rejectRentProperty);
 propertyRoute.delete('/:propertyId', loginAuthentication,propertyController.deletePropertyById);
 

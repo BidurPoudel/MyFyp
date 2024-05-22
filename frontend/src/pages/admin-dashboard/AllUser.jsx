@@ -13,11 +13,30 @@ const AllUser = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [users, setUsers] = useState([]);
   const [deleteUserId, setUserId] = useState(null);
+  const [search, setSearch] = useState('');
+const [currentPage, setCurrentPage] = useState(1);
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+  const filteredUsers = users.filter((user) => {
+    return (
+      user.username.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+  
 
   const columns = [
     {
       name: 'S.No',
-      selector: (row, index) => index + 1,
+      cell: (row) => {
+        const index = filteredUsers.indexOf(row);
+        return (currentPage - 1) * 5 + index + 1;
+      },
       width: '70px',
       style: {
         fontSize: '18px',
@@ -103,26 +122,27 @@ const AllUser = () => {
 
   return (
     <div className=' relative  w-[100%]'>
-      <div className='flex justify-center mt-16 text-3xl font-semibold'>
+      <div className='flex justify-center mt-16 mr-44 text-3xl font-semibold'>
         Data of All Users
       </div>
       <div>
       <div className='flex relative mt-10 w-full bg-red-200'>
-        <div className='absolute flex justify-center w-[50%] left-[25rem] mt-3 -top-11 text-xl'>Total users: {users.length}</div>
+        <div className='absolute flex justify-center w-[50%] left-[14rem] mt-3 -top-11 text-xl'>Total users: {users.length}</div>
       </div>
-        <div className='w-[75%] mx-[4rem] absolute top-48 left-20'>
+        <div className='w-[75%] mx-[4rem] absolute top-36 left-20'>
           <DataTable
             responsive={true}
             columns={columns}
-            data={users} // Use the 'data' array here
+            data={filteredUsers} // Use the 'data' array here
             pagination
-            paginationPerPage={10}
+            paginationPerPage={5}
             subHeader
             subHeaderComponent={
               <input
                 type='text'
-                placeholder='search property'
-                className='px-4 py-[0.3rem] my-5 border-black rounded-full bg-gradient-to-r text-black hover:bg-gradient-to-r hover:from-grey-500 hover:to-green-700 hover:text-white'
+                placeholder='search for user'
+                onChange={handleSearchChange}
+                className='px-4 py-[0.3rem] my-5 border border-1 border-black rounded-full bg-gradient-to-r text-black hover:to-green-700 '
               />
             }
             customStyles={{
@@ -168,8 +188,8 @@ const AllUser = () => {
             top: '50px', // Initial top position
             left: '50%', // Center horizontally
             transform: 'translateX(-50%)', // Center horizontally
-            height: '35%',
-            width: '40%',
+            height: '45%',
+            width: '55%',
             borderRadius: '25px',
             animation: 'fade-in 5s forwards', // Fade out animation
             transition: 'top 1s ease-out', // Apply transition effect to top position
@@ -193,6 +213,7 @@ const AllUser = () => {
             </button>
           </div>
           <p className='text-2xl font-bold my-10 mx-44 w-1/2 h-1/2 text-red-500'>This action cannot be undone!!!</p>
+          {/* <p className='text-2xl font-bold my-10 mx-44 w-1/2 h-1/2 text-red-500'>{userName}</p> */}
           <div className='flex relative justify-between w-1/7 my-[4rem] ml-[45px] '>
             <div className=' absolute right-6 top-6'>
               <button className='action-btn' onClick={() => handleDelete(deleteUserId)}>

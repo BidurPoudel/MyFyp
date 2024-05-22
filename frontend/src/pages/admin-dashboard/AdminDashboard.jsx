@@ -12,7 +12,8 @@ const AdminDashboard = () => {
   const [allProperties, setAllProperties] = useState([]);
   const [allRents, setAllRents] = useState([]);
   const [allReportedProperties, setAllReportedProperties] = useState([]);
-
+  const [allPayment, setTotalPayment] = useState([]);
+  const [totalPaymentAmount, setTotalPaymentAmount] = useState(0);
   const totalProperties = allProperties.length;
   const totalRents = allRents.length;
   const rentedPercentage = ((totalRents / totalProperties) * 100).toFixed(2);
@@ -33,7 +34,12 @@ const AdminDashboard = () => {
   const allPropertiesUrl = 'http://localhost:3001/api/admin/allProperties';
   const allRentUrl = 'http://localhost:3001/api/admin/allRents';
   const allReportedPropertiesUrl = 'http://localhost:3001/api/admin/allReportedProperties';
+  const totalPaymentURL = 'http://localhost:3001/api/payment/allPayment';
 
+  const calculateTotalPaymentAmount = (payments) => {
+    const totalAmount = payments.reduce((acc, curr) => acc + curr.paymentAmount, 0);
+    setTotalPaymentAmount(totalAmount);
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -72,75 +78,84 @@ const AdminDashboard = () => {
         console.error('Error fetching properties:', error);
       }
     };
+    const fetchTotalPayment = async () => {
+      try {
+        const response = await axois.get(totalPaymentURL);
+        console.log(response.data)
+        setTotalPayment(response.data);
+        calculateTotalPaymentAmount(response.data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
     fetchUsers();
     fetchProperties();
     fetchRentedProperties();
     fetchReportedProperties();
-
+    fetchTotalPayment();
   }, [])
 
 
   return (
     <div className='w-full mx-5 my-5'>
-
-      <div className="data-tables flex px-32 mt-12 h-36 w-full rounded-lg ">
-        <div className=' border-1 mx-2 px-14 border drop-shadow shadow-lg bg-blue-200 rounded-lg'>
+      <div className="data-tables flex justify-around px-32 mt-8 h-36 w-full rounded-lg ">
+        <div className=' border-1 w-[200px] border drop-shadow shadow-lg bg-blue-200 rounded-lg'>
           <div className='my-5 mx-[55px]'>
             <FontAwesomeIcon icon={faUsers}
-              size='3x'
+              size='2x'
               style={{ color: 'black', paddingTop: "10px" }}
-              className=' cursor-pointer relative'
+              className=' cursor-pointer relative ml-5'
               onClick={() => setOpen(!open)}
             />
           </div>
-          <div className=' text-xl '>
+          <div className=' text-lg ml-12'>
             Total User: {allUsers.length}
           </div>
         </div>
-        <div className='border-1 mx-2 px-14 border drop-shadow shadow-lg bg-green-200 rounded-lg'>
+        <div className='border-1 w-[200px] border drop-shadow shadow-lg bg-green-200 rounded-lg'>
           <div className='my-5 mx-[75px]'>
             <FontAwesomeIcon icon={faBuildingUser}
-              size='3x'
+              size='2x'
               style={{ color: 'black', paddingTop: "10px" }}
-              className=' cursor-pointer relative'
+              className=' cursor-pointer relative ml-2'
               onClick={() => setOpen(!open)}
             />
           </div>
-          <div className='text-xl '>
+          <div className='text-lg ml-6'>
             Total Properties: {allProperties.length}
           </div>
         </div>
-        <div className='border-1 mx-2 px-14 border drop-shadow shadow-lg bg-red-200 rounded-lg'>
+        <div className='border-1 w-[200px] border drop-shadow shadow-lg bg-red-200 rounded-lg'>
           <div className='my-5 mx-[75px]'>
             <FontAwesomeIcon icon={faBuildingCircleCheck}
-              size='3x'
+              size='2x'
               style={{ color: 'black', paddingTop: "10px" }}
-              className=' cursor-pointer relative'
+              className=' cursor-pointer relative ml-2'
               onClick={() => setOpen(!open)}
             />
           </div>
-          <div className='text-xl mx-9'>
+          <div className='text-lg ml-10'>
             Total Rents: {allRents.length}
           </div>
         </div>
-        <div className='border-1 mx-2 px-14 border drop-shadow shadow-lg bg-slate-200 rounded-lg'>
+        <div className='border-1 border drop-shadow shadow-lg bg-slate-200 rounded-lg'>
           <div className='my-5 mx-[75px]'>
             <FontAwesomeIcon icon={faSackDollar}
-              size='3x'
+              size='2x'
               style={{ color: 'black', paddingTop: "10px" }}
-              className=' cursor-pointer relative'
+              className=' cursor-pointer relative '
               onClick={() => setOpen(!open)}
             />
           </div>
-          <div className='text-xl '>
-            Total Revenue: 2000
+          <div className='text-lg ml-2'>
+            Total Revenue: {totalPaymentAmount}
           </div>
         </div>
       </div>
       <div className="graph-div flex relative h-[50vh] ">
         <div className='pie w-full'>
           <div>
-            <ResponsiveContainer width="150%" height={650}>
+            <ResponsiveContainer width="160%" height={500} >
               <PieChart width={600} height={650}>
                 <Pie
                   data={pieData}
@@ -156,15 +171,14 @@ const AdminDashboard = () => {
                     />
                   ))}
                 </Pie>
-                <Tooltip/>
-            <Legend />
-
+                <Tooltip />
+                <Legend />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
-        <div className='bar-graph w-1/2 px-[2%] py-24 mx-52 '>
-          <BarChart width={550} height={500} data={propertyTypeData}>
+        <div className='bar-graph pl-24  mx-44 my-20 '>
+          <BarChart width={400} height={400} className=' pl-2' data={propertyTypeData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />

@@ -5,15 +5,14 @@
 .form {
   @apply border-solid border-stone-950 border-[1.5px] ml-[30vh] mt-[10vh] pt-10 pl-10 w-[28vw] text-black bg-white shadow-2xl drop-shadow-2xl
 }
-.form-admin {
-   
-}
+
+
 .sign-up {
   @apply border w-full mt-[5vh] px-[9.5rem] py-[3rem]
 }
 
 input, ::placeholder, label {
-  @apply md:text-xl
+  @apply md:text-base 
 }
 
 label {
@@ -21,24 +20,28 @@ label {
 }
 
 .input-field {
-  @apply mb-3 p-[4vw] py-2 w-[24vw] border border-black rounded-lg outline-blue-500
+  @apply mb-3 p-[1vw] py-2 w-[24vw] border border-black rounded-lg outline-blue-500
 }
 
 input[type="password"] {
-  @apply mb-3 p-[4vw] py-2 w-[24vw] border border-black rounded-lg outline-blue-500
+  @apply mb-3 py-2 w-[24vw] border border-black rounded-lg outline-blue-500
 }
-
+.forgetPassword{
+  @apply mb-3 px-2 py-2 w-[24vw] border border-black rounded-lg outline-blue-500
+}
 input[type="file"] {
-  @apply w-[15vw]
+  @apply w-[18vw]
 }
 
 input[type='radio']{
-  @apply inline-block scale-150 mx-2 ml-4 
+  @apply inline-block scale-150 ml-4
 }
 
+.input-label{
+  @apply text-base
+}
 .input-listings, input[type="number"] {
-  @apply mb-3 p-[3vw] py-4 w-[20vw] h-9 border border-black rounded-lg outline-blue-500 placeholder:text-center;
-
+  @apply mb-3 p-[2vw] py-2 w-[20vw] h-9 border text-sm border-black rounded-lg outline-blue-500 placeholder:text-center placeholder:text-base
 }
 
 .input-button {
@@ -52,7 +55,7 @@ input[type='radio']{
 }
 
 .rent-button {
-  @apply text-white bg-green-500 h-10 w-[30vh] my-[5vh] ml-[20vw] rounded float-left hover:bg-green-700 transition-all delay-75 hover:text-lg
+  @apply text-white bg-green-500 h-10 w-[20vh] my-[5vh] ml-[20vw] rounded float-left hover:bg-green-700 transition-all delay-75 hover:text-lg
 }
 
 .upload {
@@ -84,7 +87,7 @@ h2:nth-child(2) {
 }
 
 .rentButton {
-  @apply text-white bg-green-500 py-2 mt-[-2rem] mb-4 -mr-[11rem] w-[43%] text-xl float-right rounded hover:bg-green-700 transition-all delay-75 hover:text-lg
+  @apply text-white bg-green-500 py-2 mt-[-2rem] mb-4 -mr-[3rem] w-[20%] text-xl float-right rounded hover:bg-green-700 transition-all delay-75 hover:text-lg
 }
 .table td, .table th{
   @apply px-12 py-2 border border-black
@@ -92,4 +95,8 @@ h2:nth-child(2) {
 
 .action-btn{
   @apply bg-red-500 border border-black mx-1 px-5 py-1 rounded-xl text-white hover:bg-red-400 hover:text-black hover:transition-all delay-[50ms] hover:outline outline-blue-700 hover:border-none text-lg outline-[3.5px]
+}
+
+textarea{
+  @apply pl-1 py-1
 }

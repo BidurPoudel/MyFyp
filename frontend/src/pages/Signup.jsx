@@ -4,12 +4,15 @@ import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Model from 'react-modal';
 import login from "../assets/login.jfif";
+import { Bounce, Zoom, toast } from 'react-toastify';
 
 const SignUp = () => {
+  
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -26,10 +29,8 @@ const SignUp = () => {
     try {
       const response = axios.post('http://localhost:3001/api/user/signup', values)
       console.log(values)
-      console.log(response.data);
 
-      if (response.ok) {
-        toast.success('Signup Successful', {
+        toast.success('email verification link is sent to email address', {
           position: "top-right",
           autoClose: 6000,
           hideProgressBar: false,
@@ -40,16 +41,22 @@ const SignUp = () => {
           theme: "light",
           transition: Zoom,
         })
-      }
-      navigate('/login')
-    } catch (error) {
-      if (error) {
-        if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.authentication) {
-          toast.error(error.response.data.errors.authentication); // Display error message to user
-        } 
+      setValues({
+        username: '',
+        email: '',
+        password: '',
+        phoneNumber: ''
+      });
+      reset();
+    }  catch (error) {
+      if (error.response && error.response.data && error.response.data.errors === "user already existed") {
+        toast.error('User already exists');
+      } else if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.authentication) {
+        toast.error(error.response.data.errors.authentication); // Display authentication error message
+      } else {
+        toast.error('An error occurred. Please try again later.'); // Generic error message
       }
     }
-
   }
 
   return (
@@ -90,7 +97,7 @@ const SignUp = () => {
                   className="input-field"
                   {...register("username", { required: true })}
                 /> {errors.username && (
-                  <p className="text-red-600 font-xs font-thin -mt-3 -mb-2 -mb-2">Username is required</p>
+                  <p className="text-red-600 font-xs font-thin -mt-3 -mb-2 ">Username is required</p>
                 )}<br />
 
                 <label htmlFor="email">Email <br /> </label>
@@ -119,7 +126,7 @@ const SignUp = () => {
                 <input id="phoneNumber"
                   {...register("phoneNumber", { required: true })}
                   placeholder="Enter your phone number"
-                  className="input-field"
+                  className="input-field py-2"
                 />
                 {errors.phoneNumber && (
                   <p className="text-red-600 font-xs font-thin -mt-3 -mb-2 ">Password is required</p>

@@ -9,7 +9,7 @@ class RentController {
                 where: {
                     propertyId: parseInt(propertyId)
                 }
-                    
+
             });
 
             if (existedProperty.ownerId === tenantId) {
@@ -34,7 +34,7 @@ class RentController {
                     isAccepted: false
                 }
             });
-    
+
             if (existingRequest) {
                 return res.status(400).json({ error: "You already requested to rent this property" });
             }
@@ -56,11 +56,11 @@ class RentController {
         }
     }
 
-    
+
     getAllRentRequests = async (req, res, next) => {
         try {
             const userId = req.user.userId;
-            if(!userId) console.log('not logged in!!');
+            if (!userId) console.log('not logged in!!');
             const properties = await prisma.property.findMany({
                 where: {
                     ownerId: userId,
@@ -76,12 +76,12 @@ class RentController {
                     },
                     images: true,
                     propertyType: true,
-                    rent:{
-                        where:{
-                            isAccepted:false
+                    rent: {
+                        where: {
+                            isAccepted: false
                         },
-                        include:{
-                            tenant:{
+                        include: {
+                            tenant: {
                                 select: {
                                     userId: true,
                                     username: true,
@@ -104,7 +104,7 @@ class RentController {
         }
     };
 
-    
+
 
     acceptedRentProperty = async (req, res) => {
         const { rentId } = req.params
@@ -138,8 +138,10 @@ class RentController {
                     isAvailable: false
                 }
             });
-
-            res.json(acceptedRentRequest);
+        
+            // Construct the message including owner's name
+            // const message = `Your rental request for property "${rentRequest.property.address}" has been accepted by ${ownerUsername}.`;
+            res.json({ acceptedRentRequest });
         } catch (error) {
             res.status(500).json({ error: 'Internal server error' });
         }
@@ -153,7 +155,7 @@ class RentController {
                     rentId: parseInt(rentId)
                 },
                 include: {
-                    property: true, 
+                    property: true,
                     tenant: true
                 }
             });
@@ -166,9 +168,61 @@ class RentController {
                     rentId: parseInt(rentId)
                 }
             });
-    
-            res.json({message: "You rejected he request"})
+
+            res.json({ message: "You rejected he request" })
         } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
+    sendNotification = async (req, res) => {
+        const tenantId = req.user.userId;
+        try {
+            const acceptedRentRequest = await prisma.rent.findMany({
+                where: {
+                    tenantId: parseInt(tenantId),
+                    isAccepted: true,
+                },
+                include: {
+                    property: {
+                        include: {
+                            owner: {
+                                select: {
+                                    username: true
+                                }
+                            },
+                            propertyType:{
+                                select:{
+                                    propertyName:true
+                                }
+                            }
+                        }
+                    },
+                    tenant: true
+                }
+            });
+    
+            if (!acceptedRentRequest) {
+                return res.status(404).json({ error: "No accepted rent request found for the tenant" });
+            }
+    
+            const messages = acceptedRentRequest.map(acceptedRentRequest => {
+                const { property, tenant } = acceptedRentRequest;
+                if (!property) {
+                    return `No property found for this rent request`;
+                }
+                const { address } = property;
+                const {propertyName}= property.propertyType;
+                const { username: ownerUsername } = property.owner;
+                const { username: tenantUsername } = tenant;
+                return `Hi &nbsp;<strong>${tenantUsername}</strong>, your rental request for &nbsp; <strong>${propertyName}</strong> 
+                &nbsp;at ${address} has been accepted by owner <strong>
+                &nbsp; ${ownerUsername}</strong>`;
+            });
+    
+            res.json( messages );
+        } catch (error) {
+            console.log(error);
             res.status(500).json({ error: 'Internal server error' });
         }
     }

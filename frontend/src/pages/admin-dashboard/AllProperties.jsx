@@ -13,7 +13,20 @@ const AllProperties = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [deletePropertyId, setDeletePropertyId] = useState(null);
-  
+  const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+  const filteredProperties = properties.filter((property) => {
+    return (
+      property.propertyType.propertyName.toLowerCase().includes(search.toLowerCase()) ||
+      property.address.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+
+
   async function handleDeleteButton(propertyId){
     setIsVisible(true)
     setDeletePropertyId(propertyId)
@@ -47,11 +60,17 @@ const AllProperties = () => {
     fetchProperties();
   }, []);
 
-  
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   const columns = [
     {
       name: 'S.No',
-      selector: (row, index) => index + 1,
+      cell: (row) => {
+        const index = filteredProperties.indexOf(row);
+        return (currentPage - 1) * 5 + index + 1;
+      },
       width: '70px',
       style: {
         fontSize: '18px',
@@ -121,64 +140,65 @@ const AllProperties = () => {
           </button>
         </div>
       ),
-      minWidth: '20%',
+      minWidth: '12%',
     },
   ];
 
   return (
     <div className=' relative  w-[100%]'>
-      <div className='flex justify-center mt-16 text-3xl font-semibold'>
+      <div className='flex justify-center mt-16 mr-44 text-3xl font-semibold'>
         Data of Properties
       </div>
       <div>
       <div className='flex relative mt-10 w-full bg-red-200'>
-        <div className='absolute flex justify-center w-[50%] left-[25rem] mt-3 -top-11 text-xl'>Total properties: {properties.length}</div>
+        <div className='absolute flex justify-center w-[50%] left-[15rem] mt-3 -top-11 text-xl'>Total properties: {properties.length}</div>
       </div>
-        <div className='w-[75%] mx-[4rem] absolute top-48 left-20'>
-          <DataTable
-            responsive={true}
-            columns={columns}
-            data={properties} // Use the 'data' array here
-            pagination
-            subHeader
-            subHeaderComponent={
-              <input
-                type='text'
-                placeholder='search property'
-                className='px-4 py-[0.3rem] my-5 border-black rounded-full bg-gradient-to-r text-black hover:bg-gradient-to-r hover:from-grey-500 hover:to-green-700 hover:text-white'
-              />
-            }
-            customStyles={{
-              table: {
-                style: {
-                  border: '0.05rem solid black',
+      <div className="table-responsive table mx-[10%] w-[60vw]">
+        <DataTable
+          responsive={true}
+          columns={columns}
+          data={filteredProperties}
+          pagination
+          subHeader
+          subHeaderComponent={
+            <input
+              onChange={handleSearchChange}
+              type='text'
+              placeholder='search property'
+              className='px-4 py-[0.3rem] my-10 border-black rounded-full border'
+            />
+          }
+          customStyles={{
+            table: {
+              style: {
+                border: '0.05rem solid black',
+              },
+            },
+            headCells: {
+              style: {
+                backgroundColor: '#333',
+                color: '#fff',
+                fontSize: 'medium',
+                width: '100%',
+              },
+            },
+            rows: {
+              style: {
+                alignItems: 'center',
+                paddingY: '2px',
+                '&:nth-of-type(odd)': {
+                  backgroundColor: '#f5f5f5',
                 },
               },
-              headCells: {
-                style: {
-                  backgroundColor: '#333',
-                  color: '#fff',
-                  fontSize: 'medium',
-                  width: '100%',
-                },
+            },
+            columns: {
+              style: {
+                width: '2rem',
               },
-              rows: {
-                style: {
-                  alignItems: 'center',
-                  paddingY: '2px',
-                  '&:nth-of-type(odd)': {
-                    backgroundColor: '#f5f5f5', // grey background for odd rows
-                  },
-                },
-              },
-              columns: {
-                style: {
-                  width: '2rem',
-                },
-              },
-            }}
-          />
-        </div>
+            },
+          }}
+        />
+      </div>
       </div>
       <Model
         isOpen={isVisible}
@@ -188,11 +208,11 @@ const AllProperties = () => {
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
           },
           content: {
-            top: '50px', // Initial top position
-            left: '50%', // Center horizontally
+            top: '50px',
+            left: '50%', 
             transform: 'translateX(-50%)', // Center horizontally
-            height: '35%',
-            width: '40%',
+            height: '45%',
+            width: '55%',
             borderRadius: '25px',
             animation: 'fade-in 5s forwards', // Fade out animation
             transition: 'top 1s ease-out', // Apply transition effect to top position

@@ -9,5 +9,8 @@ const userRoute = Router();
 // userRoute.get('/logout', userController.logout)
 userRoute.post('/login', userController.login);
 userRoute.post("/signup", userController.signup);
-userRoute.get('/profile', loginAuthentication ,userController.getUserData)
+userRoute.get('/profile', loginAuthentication ,userController.getUserData);
+userRoute.post('/changepassword', loginAuthentication, userController.changePassword);
+userRoute.post('/findEmail',  userController.sendEmail);
+userRoute.post('/forgotPassword', userController.forgotPassword);
 export default userRoute;

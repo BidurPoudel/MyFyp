@@ -9,48 +9,35 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import OwnerPropertiesTable from '../../components/OwnerPropertiesTable';
 
 const Payment = () => {
-  // const { propertyId } = useParams();
-  const [isVisible, setIsVisible] = useState(false);
-  const [properties, setProperties] = useState([]);
-  const [deletePropertyId, setDeletePropertyId] = useState(null);
-  const data = [
-    {
-      name: 'bidur',
-      email: 'bidur@gmail.com',
-      contactNumber: '9846711347',
-    },
-    {
-      name: 'shyam',
-      email: '@gmail.com',
-      contactNumber: '9846711347',
-    },
-    {
-      name: 'shyam',
-      email: 'shyam@gmail.com',
-      contactNumber: '9846711347',
-    },
-    {
-      name: 'ram',
-      email: 'ram@gmail.com',
-      contactNumber: '9846711347',
-    },
-  ];
-  async function handleDeleteButton(){
-    setIsVisible(true)
-  }
 
+  const [payment, setPayment] = useState([]);
+  const [search, setSearch] = useState('');
+  const [totalPaymentAmount, setTotalPaymentAmount] = useState(0);
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const filteredPayments = payment.filter((pay) => {
+    return (
+      pay.owner.username.toLowerCase().includes(search.toLowerCase()) ||
+      pay.owner.email.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+
+  const calculateTotalPaymentAmount = (payments) => {
+    const totalAmount = payments.reduce((acc, curr) => acc + curr.paymentAmount, 0);
+    setTotalPaymentAmount(totalAmount);
+  };
+
+  
   useEffect(() => {
     const token = localStorage.getItem('token');
     const fetchProperties = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/admin/allpayments', {
-          headers: {
-            Authorization: token,
-          },
-          withCredentials: true,
-        });
-        console.log(response.data)
-        setRents(response.data);
+        const response = await axios.get('http://localhost:3001/api/payment/allPayment');
+        console.log(response.data);
+        setPayment(response.data);
+        calculateTotalPaymentAmount(response.data);
       } catch (error) {
         console.error('Error fetching properties:', error);
       }
@@ -58,6 +45,7 @@ const Payment = () => {
 
     fetchProperties();
   }, []);
+
 
   const columns = [
     {
@@ -69,24 +57,32 @@ const Payment = () => {
       },
     },
     {
-      name: 'User Name',
-      selector: (row) => row.name,
-     
+      name: 'Owner Name',
+      selector: (row) => row.owner.username,
+      minWidth: '50px',
       style: {
         fontSize: '18px', minWidth: '100px',
       },
     },
     {
       name: 'Email Address',
-      selector: (row) => row.email,
-      minWidth: '250px',
+      selector: (row) => row.owner.email,
+      minWidth: '50 0px',
       style: {
         fontSize: '18px',
       },
     },
     {
-      name: 'Contact number',
-      selector: (row) => row.contactNumber,
+      name: 'Payment amount',
+      selector: (row) => row.paymentAmount,
+      style: {
+        fontSize: '18px',
+      },
+    },
+    {
+      name: 'Payment Date',
+      width: '300px',
+      selector: (row) => row.paymentDate,
       style: {
         fontSize: '18px',
       },
@@ -97,30 +93,32 @@ const Payment = () => {
   return (
     <div className=' relative  w-[100%]'>
       <div className='flex justify-center mt-16 text-3xl font-semibold'>
-        Data of All Users
+        Data of All Rents
       </div>
       <div>
       <div className='flex relative mt-10 w-full bg-red-200'>
-        <div className='absolute flex justify-center w-[50%] left-[25rem] mt-3 -top-11 text-xl'>Total users</div>
+        <div className='absolute flex justify-center w-[50%] left-[25rem] mt-3 -top-11 text-xl'>Total Revenue:{totalPaymentAmount}</div>
       </div>
         <div className='w-[75%] mx-[4rem] absolute top-48 left-20'>
           <DataTable
             responsive={true}
             columns={columns}
-            data={data} // Use the 'data' array here
+            data={filteredPayments} // Use the 'data' array here
             pagination
             subHeader
             subHeaderComponent={
               <input
                 type='text'
-                placeholder='search property'
-                className='px-4 py-[0.3rem] my-5 border-black rounded-full bg-gradient-to-r text-black hover:bg-gradient-to-r hover:from-grey-500 hover:to-green-700 hover:text-white'
+                onChange={handleSearchChange}
+                placeholder='search payment'
+                className='px-4 py-[0.3rem] my-5 border border-1 border-black rounded-full bg-gradient-to-r text-black hover:to-green-700 '
               />
             }
             customStyles={{
               table: {
                 style: {
                   border: '0.05rem solid black',
+                  width: '100%'
                 },
               },
               headCells: {
@@ -128,7 +126,6 @@ const Payment = () => {
                   backgroundColor: '#333',
                   color: '#fff',
                   fontSize: 'medium',
-                  width: '100%',
                 },
               },
               rows: {
@@ -136,7 +133,7 @@ const Payment = () => {
                   alignItems: 'center',
                   paddingY: '2px',
                   '&:nth-of-type(odd)': {
-                    backgroundColor: '#f5f5f5', // grey background for odd rows
+                    backgroundColor: '#f5f5f5',
                   },
                 },
               },
@@ -149,7 +146,7 @@ const Payment = () => {
           />
         </div>
       </div>
-      <Model
+      {/* <Model
         isOpen={isVisible}
         onClick={() => handleDeleteButton()}
         style={{
@@ -199,7 +196,7 @@ const Payment = () => {
             </div>
           </div>
         </div>
-      </Model>
+      </Model> */}
     </div>
   );
 }

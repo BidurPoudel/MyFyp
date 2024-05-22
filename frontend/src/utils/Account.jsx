@@ -18,7 +18,7 @@ const Account = () => {
         <FontAwesomeIcon icon={faCircleUser}
           size='xl'
           style={{ color: '#373737', paddingTop: "15px" }}
-          className='-mt-1 cursor-pointer relative'
+          className='-mt-2 cursor-pointer relative'
           onClick={onNavigate}
         />
       </div>
